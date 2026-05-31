@@ -815,64 +815,56 @@ nav { display: flex; gap: 4px; }
 <div class="toast" id="toast"></div>
 
 <script>
-const SYSTEM_PROMPT = `Sen bir İngilizce-Türkçe sözlük asistanısın. Kullanıcı bir İngilizce kelime verecek. Sen JSON formatında kapsamlı bir analiz döndür. Başka hiçbir metin yazma, sadece JSON.
+const SYSTEM_PROMPT = `Sen bir İngilizce-Türkçe sözlük asistanısın. Kullanıcı bir İngilizce kelime verecek. Sen JSON formatında kapsamlı analiz döndür. Sadece JSON yaz, başka hiçbir şey yazma.
+
+ÖNEMLI KURALLAR:
+- Tüm cümleler o kelimenin EN YAYGIN, en doğal kullanımlarından olmalı
+- Zamanlar için mutlaka gerçekçi ve anlamlı cümleler kur
+- Türkçe çeviriler akıcı ve doğal olsun
 
 JSON yapısı:
 {
   "word": "kelime",
   "phonetic": "/fonetik/",
-  "types": ["verb","noun","adj","adv"] (sadece geçerliler),
+  "types": ["verb","noun","adj","adv"],
   "mainMeaning": "Türkçe birincil anlam",
   "forms": {
-    "verb": {
-      "v1": "base form",
-      "v2": "past simple",
-      "v3": "past participle",
-      "ving": "-ing hali",
-      "vs": "3. tekil -s/-es hali"
-    },
-    "noun": {
-      "singular": "tekil",
-      "plural": "çoğul"
-    },
-    "adjective": {
-      "base": "temel",
-      "comparative": "karşılaştırma (-er/more)",
-      "superlative": "üstünlük (-est/most)"
-    },
-    "adverb": {
-      "form": "zarf hali"
-    }
+    "verb": { "v1": "base", "v2": "past simple", "v3": "past participle", "ving": "-ing hali", "vs": "3. tekil -s hali" },
+    "noun": { "singular": "tekil", "plural": "çoğul" },
+    "adjective": { "base": "temel", "comparative": "more X / X-er", "superlative": "most X / X-est" },
+    "adverb": { "form": "zarf hali" }
   },
   "meanings": [
-    { "en": "İngilizce anlam/tanım", "tr": "Türkçe anlam", "example": "örnek cümle" }
+    { "en": "İngilizce tanım", "tr": "Türkçe anlam", "example": "örnek cümle" }
+  ],
+  "tenses": [
+    { "name": "Simple Present", "tr_name": "Geniş Zaman", "i_form": "I/You/We/They ile cümle", "i_tr": "Türkçe", "she_form": "He/She/It ile cümle (-s/-es)", "she_tr": "Türkçe" },
+    { "name": "Present Continuous", "tr_name": "Şimdiki Zaman", "en": "am/is/are + V-ing cümle", "tr": "Türkçe" },
+    { "name": "Simple Past", "tr_name": "Geçmiş Zaman", "en": "V2 ile cümle", "tr": "Türkçe" },
+    { "name": "Past Continuous", "tr_name": "Geçmişte Süregelen", "en": "was/were + V-ing cümle", "tr": "Türkçe" },
+    { "name": "Present Perfect", "tr_name": "Yakın Geçmiş", "en": "have/has + V3 cümle", "tr": "Türkçe" },
+    { "name": "Past Perfect", "tr_name": "Uzak Geçmiş", "en": "had + V3 cümle", "tr": "Türkçe" },
+    { "name": "Simple Future", "tr_name": "Gelecek Zaman", "en": "will + V1 cümle", "tr": "Türkçe" }
   ],
   "sentences": {
-    "positive": [
-      { "en": "olumlu cümle", "tr": "Türkçe çeviri" }
-    ],
-    "negative": [
-      { "en": "olumsuz cümle", "tr": "Türkçe çeviri" }
-    ],
-    "question": [
-      { "en": "soru cümlesi", "tr": "Türkçe çeviri" }
-    ],
-    "modal": [
-      { "en": "modal yapı cümlesi (can/could/must/should/would/will vb.)", "tr": "Türkçe çeviri" }
-    ]
+    "positive": [{ "en": "olumlu cümle", "tr": "çeviri" }, { "en": "2. olumlu", "tr": "çeviri" }],
+    "negative": [{ "en": "olumsuz cümle", "tr": "çeviri" }, { "en": "2. olumsuz", "tr": "çeviri" }],
+    "question": [{ "en": "soru cümlesi", "tr": "çeviri" }, { "en": "2. soru", "tr": "çeviri" }]
   },
-  "tenses": [
-    { "name": "Simple Present (Geniş Zaman)", "en": "cümle", "tr": "çeviri" },
-    { "name": "Present Continuous (Şimdiki Zaman)", "en": "cümle", "tr": "çeviri" },
-    { "name": "Past Continuous (Geçmiş Süregelen)", "en": "was/were doing cümlesi", "tr": "çeviri" },
-    { "name": "Present Perfect (Yakın Geçmiş)", "en": "have/has done cümlesi", "tr": "çeviri" },
-    { "name": "Past Perfect (Uzak Geçmiş)", "en": "had done cümlesi", "tr": "çeviri" },
-    { "name": "Simple Future (Gelecek Zaman)", "en": "will cümlesi", "tr": "çeviri" },
-    { "name": "Simple Past (Geçmiş Zaman)", "en": "past simple cümlesi", "tr": "çeviri" }
+  "modals": [
+    { "modal": "can", "en": "can ile cümle", "tr": "çeviri" },
+    { "modal": "could", "en": "could ile cümle", "tr": "çeviri" },
+    { "modal": "may", "en": "may ile cümle", "tr": "çeviri" },
+    { "modal": "might", "en": "might ile cümle", "tr": "çeviri" },
+    { "modal": "should", "en": "should ile cümle", "tr": "çeviri" },
+    { "modal": "must", "en": "must ile cümle", "tr": "çeviri" },
+    { "modal": "would", "en": "would ile cümle", "tr": "çeviri" },
+    { "modal": "have to", "en": "have to ile cümle", "tr": "çeviri" },
+    { "modal": "need to", "en": "need to ile cümle", "tr": "çeviri" }
   ]
 }
 
-Kelime sadece isim ise verb alanlarını boş bırak. Sadece fiil ise noun/adj/adv alanlarını boş bırak. Geçersiz alanları JSON'a dahil etme. Her anlam ve cümle doğal, yaygın kullanılan örnekler olsun. Modal cümleler can, could, must, should, would, will vb. içersin. Türkçe çeviriler akıcı ve doğal olsun.`;
+Kelime fiil değilse verb alanlarını dahil etme. Kelime isim değilse noun alanlarını dahil etme. Kelime sıfat değilse adjective alanlarını dahil etme. Kelime zarf değilse adverb alanlarını dahil etme. Zamanlar ve modaller her kelime türü için oluştur ama kelimenin türüne uygun şekilde kullan.`;
 
 let wordData = {};
 let wordList = JSON.parse(localStorage.getItem('wm_wordlist') || '[]');
@@ -984,6 +976,14 @@ async function doSearch() {
   }
 }
 
+function speak(word) {
+  if (!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = 'en-US';
+  u.rate = 0.9;
+  speechSynthesis.speak(u);
+}
+
 function renderResult(d) {
   const isSaved = wordList.some(w => w.word === d.word);
 
@@ -991,126 +991,116 @@ function renderResult(d) {
   <div class="result-card">
     <div class="result-header">
       <div>
-        <div class="word-main">${d.word}</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="word-main">${d.word}</div>
+          <button onclick="speak('${d.word}')" style="background:rgba(124,106,247,0.15);border:1px solid rgba(124,106,247,0.3);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1.1rem;" title="Telaffuz">🔊</button>
+        </div>
         <div class="word-phonetic">${d.phonetic || ''} &nbsp;·&nbsp; ${d.mainMeaning || ''}</div>
         <div class="word-types">
-          ${(d.types || []).map(t => `<span class="type-badge ${t}">${t}</span>`).join('')}
+          ${(d.types || []).map(t => '<span class="type-badge ' + t + '">' + t + '</span>').join('')}
         </div>
       </div>
       <button class="save-btn ${isSaved ? 'saved' : ''}" id="saveWordBtn" onclick="toggleSave()">
         ${isSaved ? '✓ Kaydedildi' : '+ Listeme Ekle'}
       </button>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="showTab('forms', this)">Biçimler</button>
-      <button class="tab-btn" onclick="showTab('meanings', this)">Anlamlar</button>
-      <button class="tab-btn" onclick="showTab('sentences', this)">Cümleler</button>
-      <button class="tab-btn" onclick="showTab('tenses', this)">Zamanlar</button>
     </div>`;
 
-  // FORMS TAB
-  html += `<div class="tab-panel active" id="tab-forms">`;
+  // ---- FORMS ----
+  if (d.forms) {
+    html += '<div style="padding:1.25rem 2rem;border-bottom:1px solid var(--border);">';
 
-  if (d.forms?.verb && Object.keys(d.forms.verb).length > 0) {
-    html += `<div class="section-label">Fiil Çekimleri</div>
-    <div class="forms-grid">`;
-    const labels = { v1: 'Base / V1', v2: 'Past Simple / V2', v3: 'Past Participle / V3', ving: '-ing hali', vs: '3. Tekil (-s/-es)' };
-    for (const [k, v] of Object.entries(d.forms.verb)) {
-      if (v) html += `<div class="form-item">
-        <div class="form-item-label">${labels[k] || k}</div>
-        <div class="form-item-word">${v}</div>
-      </div>`;
+    if (d.forms.verb && Object.values(d.forms.verb).some(v=>v)) {
+      html += '<div class="section-label">Fiil Çekimleri</div><div class="forms-grid">';
+      const vlabels = { v1:'Base / V1', v2:'Past Simple / V2', v3:'Past Participle / V3', ving:'-ing Hali', vs:'3. Tekil (-s/-es)' };
+      for (const [k,v] of Object.entries(d.forms.verb)) {
+        if (v) html += '<div class="form-item"><div class="form-item-label">' + (vlabels[k]||k) + '</div><div class="form-item-word">' + v + '</div></div>';
+      }
+      html += '</div>';
     }
-    html += `</div>`;
-  }
 
-  if (d.forms?.noun && Object.keys(d.forms.noun).length > 0) {
-    html += `<div class="section-label">İsim Halleri</div>
-    <div class="forms-grid">`;
-    const labels = { singular: 'Tekil', plural: 'Çoğul' };
-    for (const [k, v] of Object.entries(d.forms.noun)) {
-      if (v) html += `<div class="form-item">
-        <div class="form-item-label">${labels[k] || k}</div>
-        <div class="form-item-word">${v}</div>
-      </div>`;
+    if (d.forms.noun && Object.values(d.forms.noun).some(v=>v)) {
+      html += '<div class="section-label" style="margin-top:1rem;">İsim Halleri</div><div class="forms-grid">';
+      const nlabels = { singular:'Tekil', plural:'Çoğul' };
+      for (const [k,v] of Object.entries(d.forms.noun)) {
+        if (v) html += '<div class="form-item"><div class="form-item-label">' + (nlabels[k]||k) + '</div><div class="form-item-word">' + v + '</div></div>';
+      }
+      html += '</div>';
     }
-    html += `</div>`;
-  }
 
-  if (d.forms?.adjective && Object.keys(d.forms.adjective).length > 0) {
-    html += `<div class="section-label">Sıfat Dereceleri</div>
-    <div class="forms-grid">`;
-    const labels = { base: 'Temel', comparative: 'Karşılaştırma', superlative: 'Üstünlük' };
-    for (const [k, v] of Object.entries(d.forms.adjective)) {
-      if (v) html += `<div class="form-item">
-        <div class="form-item-label">${labels[k] || k}</div>
-        <div class="form-item-word">${v}</div>
-      </div>`;
+    if (d.forms.adjective && Object.values(d.forms.adjective).some(v=>v)) {
+      html += '<div class="section-label" style="margin-top:1rem;">Sıfat Dereceleri</div><div class="forms-grid">';
+      const alabels = { base:'Temel (Positive)', comparative:'Karşılaştırma (Comparative)', superlative:'Üstünlük (Superlative)' };
+      for (const [k,v] of Object.entries(d.forms.adjective)) {
+        if (v) html += '<div class="form-item"><div class="form-item-label">' + (alabels[k]||k) + '</div><div class="form-item-word">' + v + '</div></div>';
+      }
+      html += '</div>';
     }
-    html += `</div>`;
+
+    if (d.forms.adverb?.form) {
+      html += '<div class="section-label" style="margin-top:1rem;">Zarf Hali</div><div class="forms-grid">';
+      html += '<div class="form-item"><div class="form-item-label">Adverb</div><div class="form-item-word">' + d.forms.adverb.form + '</div></div>';
+      html += '</div>';
+    }
+
+    html += '</div>';
   }
 
-  if (d.forms?.adverb?.form) {
-    html += `<div class="section-label">Zarf Hali</div>
-    <div class="forms-grid">
-      <div class="form-item">
-        <div class="form-item-label">Adverb</div>
-        <div class="form-item-word">${d.forms.adverb.form}</div>
-      </div>
-    </div>`;
-  }
-
-  html += `</div>`;
-
-  // MEANINGS TAB
-  html += `<div class="tab-panel" id="tab-meanings">`;
+  // ---- MEANINGS ----
+  html += '<div style="padding:1.25rem 2rem;border-bottom:1px solid var(--border);">';
+  html += '<div class="section-label">Anlamlar</div>';
   (d.meanings || []).forEach((m, i) => {
-    html += `<div class="meaning-block">
-      <div class="meaning-num">${i + 1}</div>
-      <div class="meaning-en">${m.en}</div>
-      <div class="meaning-tr">→ ${m.tr}</div>
-      ${m.example ? `<div class="meaning-example">"${m.example}"</div>` : ''}
-    </div>`;
+    html += '<div class="meaning-block"><div class="meaning-num">' + (i+1) + '</div>';
+    html += '<div class="meaning-en">' + m.en + '</div>';
+    html += '<div class="meaning-tr">→ ' + m.tr + '</div>';
+    if (m.example) html += '<div class="meaning-example">"' + m.example + '"</div>';
+    html += '</div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
-  // SENTENCES TAB
-  html += `<div class="tab-panel" id="tab-sentences">`;
+  // ---- SENTENCES ----
+  html += '<div style="padding:1.25rem 2rem;border-bottom:1px solid var(--border);">';
+  html += '<div class="section-label">Cümleler</div>';
   const senTypes = [
-    { key: 'positive', label: 'Olumlu Cümleler', cls: 'positive' },
-    { key: 'negative', label: 'Olumsuz Cümleler', cls: 'negative' },
-    { key: 'question', label: 'Soru Cümleleri', cls: 'question' },
-    { key: 'modal', label: 'Modal Yapılar', cls: 'modal' }
+    { key:'positive', label:'Olumlu', cls:'positive' },
+    { key:'negative', label:'Olumsuz', cls:'negative' },
+    { key:'question', label:'Soru', cls:'question' }
   ];
   senTypes.forEach(({ key, label, cls }) => {
     const arr = d.sentences?.[key] || [];
     if (!arr.length) return;
-    html += `<div class="sentence-group">
-      <div class="sentence-group-title">
-        <div class="dot ${cls}"></div>${label}
-      </div>`;
+    html += '<div class="sentence-group"><div class="sentence-group-title"><div class="dot ' + cls + '"></div>' + label + '</div>';
     arr.forEach(s => {
-      html += `<div class="sentence-item ${cls}">
-        <div class="sen-en">${s.en}</div>
-        <div class="sen-tr">${s.tr}</div>
-      </div>`;
+      html += '<div class="sentence-item ' + cls + '"><div class="sen-en">' + s.en + '</div><div class="sen-tr">' + s.tr + '</div></div>';
     });
-    html += `</div>`;
+    html += '</div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
-  // TENSES TAB
-  html += `<div class="tab-panel" id="tab-tenses">`;
+  // ---- TENSES ----
+  html += '<div style="padding:1.25rem 2rem;border-bottom:1px solid var(--border);">';
+  html += '<div class="section-label">7 Temel Zaman</div>';
   (d.tenses || []).forEach(t => {
-    html += `<div class="tense-block">
-      <div class="tense-name">${t.name}</div>
-      <div class="tense-sentence">${t.en}</div>
-      <div class="tense-tr">${t.tr}</div>
-    </div>`;
+    html += '<div class="tense-block"><div class="tense-name">' + t.name + ' — ' + (t.tr_name||'') + '</div>';
+    if (t.i_form) {
+      html += '<div style="margin-bottom:6px;"><span style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">I / You / We / They</span><div class="tense-sentence">' + t.i_form + '</div><div class="tense-tr">' + (t.i_tr||'') + '</div></span></div>';
+      if (t.she_form) html += '<div><span style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">He / She / It</span><div class="tense-sentence">' + t.she_form + '</div><div class="tense-tr">' + (t.she_tr||'') + '</div></span></div>';
+    } else {
+      html += '<div class="tense-sentence">' + (t.en||'') + '</div><div class="tense-tr">' + (t.tr||'') + '</div>';
+    }
+    html += '</div>';
   });
-  html += `</div>`;
+  html += '</div>';
 
-  html += `</div>`;
+  // ---- MODALS ----
+  html += '<div style="padding:1.25rem 2rem;">';
+  html += '<div class="section-label">Modal Yapılar</div>';
+  (d.modals || []).forEach(m => {
+    html += '<div class="tense-block"><div class="tense-name" style="color:var(--accent2);">' + m.modal.toUpperCase() + '</div>';
+    html += '<div class="tense-sentence">' + m.en + '</div><div class="tense-tr">' + m.tr + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '</div>';
   document.getElementById('result-area').innerHTML = html;
 }
 
