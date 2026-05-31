@@ -1,49 +1,37 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vocabulary App</title>
 
-  <title>English AI App</title>
-
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <div class="container">
 
-```
-<header>
-  <h1>English AI App</h1>
+    <header>
+      <h1>Vocabulary App</h1>
+      <p>AI-powered vocabulary learning system</p>
+    </header>
 
-  <p>
-    AI-powered vocabulary learning system
-  </p>
-</header>
+    <div class="top-bar">
+      <input
+        type="text"
+        id="wordInput"
+        placeholder="Enter a word..."
+      />
 
-<section class="top-bar">
+      <button onclick="addWord()">
+        Add Word
+      </button>
+    </div>
 
-  <input
-    type="text"
-    id="wordInput"
-    placeholder="Enter a word..."
-  />
-
-  <button onclick="addWord()">
-    Add Word
-  </button>
-
-</section>
-
-<section id="wordList" class="word-list">
-
-</section>
-```
+    <div id="wordList" class="word-list"></div>
 
   </div>
 
   <script src="script.js"></script>
-
 </body>
 </html>
