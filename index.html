@@ -744,6 +744,7 @@ nav { display: flex; gap: 4px; }
       <button class="nav-btn active" onclick="showView('search')">Ara</button>
       <button class="nav-btn" onclick="showView('list')">Listem</button>
       <button class="nav-btn" onclick="showView('flash')">Kartlar</button>
+      <button class="nav-btn" onclick="showView('settings')">⚙ Ayarlar</button>
     </nav>
   </header>
 
@@ -760,14 +761,6 @@ nav { display: flex; gap: 4px; }
         autocomplete="off" spellcheck="false"
         onkeydown="if(event.key==='Enter') doSearch()">
       <button class="search-btn" id="searchBtn" onclick="doSearch()">Analiz Et →</button>
-    </div>
-
-    <div class="api-section" id="apiSection">
-      <p>🔑 Groq API anahtarınızı girin (tarayıcınızda saklanır, hiçbir yere gönderilmez) — <a href="https://console.groq.com/keys" target="_blank" style="color:var(--accent2);">Ücretsiz al →</a></p>
-      <div class="api-row">
-        <input class="api-input" id="apiKeyInput" type="password" placeholder="gsk_...">
-        <button class="api-save-btn" onclick="saveApiKey()">Kaydet</button>
-      </div>
     </div>
 
     <div id="result-area"></div>
@@ -789,6 +782,33 @@ nav { display: flex; gap: 4px; }
       <span class="flash-progress" id="flash-progress"></span>
     </div>
     <div id="flash-container"></div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div class="view" id="view-settings">
+    <div class="list-header">
+      <h2>Ayarlar</h2>
+    </div>
+    <div style="margin-top: 1.5rem; max-width: 560px;">
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem;">
+        <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.75rem;">Groq API Anahtarı</div>
+        <p style="font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem;">
+          Anahtarın tarayıcında saklanır, hiçbir yere gönderilmez. 
+          <a href="https://console.groq.com/keys" target="_blank" style="color: var(--accent2);">Ücretsiz al →</a>
+        </p>
+        <div class="api-row">
+          <input class="api-input" id="apiKeyInput" type="password" placeholder="gsk_..." style="flex:1;">
+          <button class="api-save-btn" onclick="saveApiKey()">Kaydet</button>
+        </div>
+        <div id="apiStatus" style="margin-top: 10px; font-size: 0.8rem; color: var(--muted);"></div>
+      </div>
+
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-top: 12px;">
+        <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.75rem;">Kelime Listesi</div>
+        <p style="font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem;">Tüm kayıtlı kelimeleri sil.</p>
+        <button class="btn-outline" style="color: var(--red); border-color: rgba(248,113,113,0.3);" onclick="clearAllWords()">Tüm Kelimeleri Sil</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -870,18 +890,39 @@ function saveApiKey() {
   const k = document.getElementById('apiKeyInput').value.trim();
   if (!k) return showToast('API anahtarı boş olamaz');
   localStorage.setItem('wm_apikey', k);
-  document.getElementById('apiSection').classList.remove('show');
   showToast('API anahtarı kaydedildi ✓');
+  updateApiStatus();
+}
+
+function updateApiStatus() {
+  const el = document.getElementById('apiStatus');
+  if (!el) return;
+  const k = getApiKey();
+  el.textContent = k ? '✓ Anahtar kayıtlı: ' + k.slice(0,8) + '...' : 'Henüz anahtar girilmedi';
+  el.style.color = k ? 'var(--green)' : 'var(--muted)';
+}
+
+function clearAllWords() {
+  if (!confirm('Tüm kelimeler silinecek. Emin misin?')) return;
+  wordList = [];
+  localStorage.setItem('wm_wordlist', JSON.stringify(wordList));
+  showToast('Tüm kelimeler silindi');
 }
 
 function showView(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
-  const navMap = { search: 0, list: 1, flash: 2 };
+  const navMap = { search: 0, list: 1, flash: 2, settings: 3 };
   document.querySelectorAll('.nav-btn')[navMap[name]].classList.add('active');
   if (name === 'list') renderWordList();
   if (name === 'flash') initFlash();
+  if (name === 'settings') {
+    const k = getApiKey();
+    const inp = document.getElementById('apiKeyInput');
+    if (inp && k) inp.value = k;
+    updateApiStatus();
+  }
 }
 
 async function doSearch() {
@@ -890,8 +931,8 @@ async function doSearch() {
 
   const key = getApiKey();
   if (!key) {
-    document.getElementById('apiSection').classList.add('show');
-    showToast('Lütfen önce API anahtarınızı girin');
+    showToast('Lütfen önce Ayarlar'dan API anahtarı girin');
+    showView('settings');
     return;
   }
 
@@ -1228,9 +1269,7 @@ function showToast(msg) {
 }
 
 // Init
-if (!getApiKey()) {
-  document.getElementById('apiSection').classList.add('show');
-}
+updateApiStatus();
 </script>
 </body>
 </html>
