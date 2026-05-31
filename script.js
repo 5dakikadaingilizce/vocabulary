@@ -2,19 +2,20 @@ let words = JSON.parse(localStorage.getItem("words")) || [];
 
 renderWords();
 
-function addWord() {
+
+async function addWord() {
 
 const input = document.getElementById("wordInput");
 
-const value = input.value.trim();
+const value = input.value.trim().toLowerCase();
 
 if (!value) return;
 
 const wordData = {
 id: Date.now(),
 word: value,
-meaning: "Loading meaning...",
-example: "AI example sentence will come here."
+meaning: "Loading...",
+example: "Loading example..."
 };
 
 words.unshift(wordData);
@@ -24,7 +25,53 @@ saveWords();
 renderWords();
 
 input.value = "";
+
+try {
+
+```
+const response = await fetch(
+  `https://api.dictionaryapi.dev/api/v2/entries/en/${value}`
+);
+
+const data = await response.json();
+
+const meaning =
+  data[0]?.meanings[0]?.definitions[0]?.definition
+  || "No meaning found.";
+
+const example =
+  data[0]?.meanings[0]?.definitions[0]?.example
+  || "No example found.";
+
+wordData.meaning = meaning;
+
+wordData.example = example;
+
+saveWords();
+
+renderWords();
+```
+
+} catch (error) {
+
+```
+wordData.meaning = "Error fetching meaning.";
+
+wordData.example = "Please try again.";
+
+saveWords();
+
+renderWords();
+```
+
 }
+}
+
+
+
+
+
+
 
 function deleteWord(id) {
 
