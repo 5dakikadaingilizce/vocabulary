@@ -763,9 +763,9 @@ nav { display: flex; gap: 4px; }
     </div>
 
     <div class="api-section" id="apiSection">
-      <p>🔑 Google Gemini API anahtarınızı girin (tarayıcınızda saklanır, hiçbir yere gönderilmez) — <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent2);">Ücretsiz al →</a></p>
+      <p>🔑 Groq API anahtarınızı girin (tarayıcınızda saklanır, hiçbir yere gönderilmez) — <a href="https://console.groq.com/keys" target="_blank" style="color:var(--accent2);">Ücretsiz al →</a></p>
       <div class="api-row">
-        <input class="api-input" id="apiKeyInput" type="password" placeholder="AIza...">
+        <input class="api-input" id="apiKeyInput" type="password" placeholder="gsk_...">
         <button class="api-save-btn" onclick="saveApiKey()">Kaydet</button>
       </div>
     </div>
@@ -904,13 +904,20 @@ async function doSearch() {
     </div>`;
 
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+      },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [{ parts: [{ text: `Kelime: "${word}"` }] }],
-        generationConfig: { maxOutputTokens: 2000, temperature: 0.3 }
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 2000,
+        temperature: 0.3,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: `Kelime: "${word}"` }
+        ]
       })
     });
 
@@ -920,7 +927,7 @@ async function doSearch() {
     }
 
     const data = await res.json();
-    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const raw = data.choices?.[0]?.message?.content || '';
     const clean = raw.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
     wordData = parsed;
