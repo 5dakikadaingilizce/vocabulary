@@ -1,37 +1,1229 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vocabulary App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WordMind — AI İngilizce Sözlük</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #1a1a24;
+  --card: #16161f;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0f0f5;
+  --muted: #8888a0;
+  --accent: #7c6af7;
+  --accent2: #a78bfa;
+  --accent3: #c4b5fd;
+  --green: #34d399;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --teal: #2dd4bf;
+  --pink: #f472b6;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <link rel="stylesheet" href="style.css" />
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background grid effect */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(124,106,247,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,106,247,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  color: white;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.5px;
+}
+
+.logo-text span { color: var(--accent2); }
+
+nav { display: flex; gap: 4px; }
+
+.nav-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover { color: var(--text); border-color: var(--border2); }
+.nav-btn.active { background: var(--bg3); color: var(--text); border-color: var(--border2); }
+
+/* VIEWS */
+.view { display: none; }
+.view.active { display: block; }
+
+/* SEARCH VIEW */
+.hero {
+  text-align: center;
+  padding: 4rem 0 2rem;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.hero h1 .gradient {
+  background: linear-gradient(90deg, var(--accent2), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.125rem;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.15);
+}
+
+.search-input::placeholder { color: var(--muted); }
+
+.search-btn {
+  position: absolute;
+  right: 8px; top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, var(--accent), #5b4fe9);
+  border: none;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 8px 20px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.search-btn:hover { opacity: 0.9; }
+.search-btn:active { transform: translateY(-50%) scale(0.97); }
+.search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* RESULT */
+#result-area { margin-top: 2rem; }
+
+.loading-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.spinner {
+  width: 32px; height: 32px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.result-header {
+  padding: 1.75rem 2rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.word-main {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: var(--text);
+}
+
+.word-phonetic {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+
+.word-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.type-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.type-badge.verb { color: var(--teal); border-color: rgba(45,212,191,0.3); background: rgba(45,212,191,0.08); }
+.type-badge.noun { color: var(--accent2); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.08); }
+.type-badge.adj { color: var(--amber); border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.08); }
+.type-badge.adv { color: var(--pink); border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.08); }
+
+.save-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.save-btn:hover { color: var(--text); border-color: var(--accent); }
+.save-btn.saved { color: var(--green); border-color: rgba(52,211,153,0.4); }
+
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 12px 1.5rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover { color: var(--text); background: var(--bg3); }
+.tab-btn.active { color: var(--accent2); background: rgba(124,106,247,0.12); }
+
+/* TAB CONTENT */
+.tab-panel { display: none; padding: 1.5rem 2rem; }
+.tab-panel.active { display: block; }
+
+/* FORMS SECTION */
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.forms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.form-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.form-item-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.form-item-word {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--accent3);
+}
+
+.form-item-tr {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* MEANINGS */
+.meaning-block {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.meaning-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.meaning-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  background: rgba(124,106,247,0.15);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent2);
+  margin-bottom: 6px;
+}
+
+.meaning-en { font-size: 0.95rem; color: var(--text); margin-bottom: 4px; }
+.meaning-tr { font-size: 0.9rem; color: var(--teal); }
+.meaning-example { font-size: 0.85rem; color: var(--muted); margin-top: 6px; font-style: italic; }
+
+/* SENTENCES */
+.sentence-group { margin-bottom: 1.5rem; }
+
+.sentence-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot.positive { background: var(--green); }
+.dot.negative { background: var(--red); }
+.dot.question { background: var(--amber); }
+.dot.modal { background: var(--accent2); }
+
+.sentence-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+
+.sentence-item.positive { border-left-color: var(--green); }
+.sentence-item.negative { border-left-color: var(--red); }
+.sentence-item.question { border-left-color: var(--amber); }
+.sentence-item.modal { border-left-color: var(--accent2); }
+
+.sen-en { font-size: 0.9rem; color: var(--text); }
+.sen-tr { font-size: 0.82rem; color: var(--muted); margin-top: 3px; }
+
+/* TENSES */
+.tense-block {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+
+.tense-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent2);
+  margin-bottom: 8px;
+}
+
+.tense-sentence { font-size: 0.9rem; color: var(--text); margin-bottom: 3px; }
+.tense-tr { font-size: 0.82rem; color: var(--muted); }
+
+/* WORDLIST VIEW */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.btn-outline {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover { border-color: var(--accent); color: var(--accent2); }
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--muted);
+}
+
+.empty-state .big-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.4;
+}
+
+.wordlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.word-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.word-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+
+.word-card-word {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.word-card-tr {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.word-card-del {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.word-card-del:hover { color: var(--red); }
+
+/* FLASHCARD VIEW */
+.flash-header {
+  padding: 2rem 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flash-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.flash-progress {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.flash-scene {
+  perspective: 1000px;
+  height: 300px;
+  margin: 1rem 0 1.5rem;
+  cursor: pointer;
+}
+
+.flash-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flash-inner.flipped { transform: rotateY(180deg); }
+
+.flash-face {
+  position: absolute;
+  inset: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  padding: 2rem;
+}
+
+.flash-face.back { transform: rotateY(180deg); }
+
+.flash-tag {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.flash-word {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -2px;
+  text-align: center;
+  color: var(--text);
+}
+
+.flash-hint { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; }
+
+.flash-tr {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--teal);
+  text-align: center;
+}
+
+.flash-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 0.5rem;
+}
+
+.flash-btn {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 10px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.flash-btn:hover { border-color: var(--accent); color: var(--accent2); }
+.flash-btn.correct:hover { border-color: var(--green); color: var(--green); }
+.flash-btn.wrong:hover { border-color: var(--red); color: var(--red); }
+.flash-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.progress-bar-wrap {
+  background: var(--bg3);
+  border-radius: 4px;
+  height: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* API KEY */
+.api-section {
+  background: var(--bg3);
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  display: none;
+}
+
+.api-section.show { display: block; }
+
+.api-section p {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.api-row { display: flex; gap: 8px; }
+
+.api-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.api-input:focus { border-color: var(--accent); }
+
+.api-save-btn {
+  background: var(--accent);
+  border: none;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 0.875rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .tab-panel { padding: 1.25rem 1rem; }
+  .result-header { padding: 1.25rem 1rem; }
+  .word-main { font-size: 2rem; }
+  .forms-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
 </head>
 <body>
 
-  <div class="container">
+<div class="app">
+  <header>
+    <div class="logo">
+      <div class="logo-mark">W</div>
+      <div class="logo-text">Word<span>Mind</span></div>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="showView('search')">Ara</button>
+      <button class="nav-btn" onclick="showView('list')">Listem</button>
+      <button class="nav-btn" onclick="showView('flash')">Kartlar</button>
+    </nav>
+  </header>
 
-    <header>
-      <h1>Vocabulary App</h1>
-      <p>AI-powered vocabulary learning system</p>
-    </header>
-
-    <div class="top-bar">
-      <input
-        type="text"
-        id="wordInput"
-        placeholder="Enter a word..."
-      />
-
-      <button onclick="addWord()">
-        Add Word
-      </button>
+  <!-- SEARCH VIEW -->
+  <div class="view active" id="view-search">
+    <div class="hero">
+      <h1>İngilizce <span class="gradient">AI Sözlük</span></h1>
+      <p>Kelimeyi yaz, yapay zeka her şeyi hazırlasın</p>
     </div>
 
-    <div id="wordList" class="word-list"></div>
+    <div class="search-wrap">
+      <input class="search-input" id="searchInput" type="text"
+        placeholder="örn: run, beautiful, quickly..."
+        autocomplete="off" spellcheck="false"
+        onkeydown="if(event.key==='Enter') doSearch()">
+      <button class="search-btn" id="searchBtn" onclick="doSearch()">Analiz Et →</button>
+    </div>
 
+    <div class="api-section" id="apiSection">
+      <p>🔑 Google Gemini API anahtarınızı girin (tarayıcınızda saklanır, hiçbir yere gönderilmez) — <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent2);">Ücretsiz al →</a></p>
+      <div class="api-row">
+        <input class="api-input" id="apiKeyInput" type="password" placeholder="AIza...">
+        <button class="api-save-btn" onclick="saveApiKey()">Kaydet</button>
+      </div>
+    </div>
+
+    <div id="result-area"></div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- LIST VIEW -->
+  <div class="view" id="view-list">
+    <div class="list-header">
+      <h2>Kelime Listem</h2>
+      <button class="btn-outline" onclick="showView('flash')">Flash Kart Modu →</button>
+    </div>
+    <div id="wordlist-container"></div>
+  </div>
+
+  <!-- FLASH VIEW -->
+  <div class="view" id="view-flash">
+    <div class="flash-header">
+      <h2>Flash Kartlar</h2>
+      <span class="flash-progress" id="flash-progress"></span>
+    </div>
+    <div id="flash-container"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SYSTEM_PROMPT = `Sen bir İngilizce-Türkçe sözlük asistanısın. Kullanıcı bir İngilizce kelime verecek. Sen JSON formatında kapsamlı bir analiz döndür. Başka hiçbir metin yazma, sadece JSON.
+
+JSON yapısı:
+{
+  "word": "kelime",
+  "phonetic": "/fonetik/",
+  "types": ["verb","noun","adj","adv"] (sadece geçerliler),
+  "mainMeaning": "Türkçe birincil anlam",
+  "forms": {
+    "verb": {
+      "v1": "base form",
+      "v2": "past simple",
+      "v3": "past participle",
+      "ving": "-ing hali",
+      "vs": "3. tekil -s/-es hali"
+    },
+    "noun": {
+      "singular": "tekil",
+      "plural": "çoğul"
+    },
+    "adjective": {
+      "base": "temel",
+      "comparative": "karşılaştırma (-er/more)",
+      "superlative": "üstünlük (-est/most)"
+    },
+    "adverb": {
+      "form": "zarf hali"
+    }
+  },
+  "meanings": [
+    { "en": "İngilizce anlam/tanım", "tr": "Türkçe anlam", "example": "örnek cümle" }
+  ],
+  "sentences": {
+    "positive": [
+      { "en": "olumlu cümle", "tr": "Türkçe çeviri" }
+    ],
+    "negative": [
+      { "en": "olumsuz cümle", "tr": "Türkçe çeviri" }
+    ],
+    "question": [
+      { "en": "soru cümlesi", "tr": "Türkçe çeviri" }
+    ],
+    "modal": [
+      { "en": "modal yapı cümlesi (can/could/must/should/would/will vb.)", "tr": "Türkçe çeviri" }
+    ]
+  },
+  "tenses": [
+    { "name": "Simple Present (Geniş Zaman)", "en": "cümle", "tr": "çeviri" },
+    { "name": "Present Continuous (Şimdiki Zaman)", "en": "cümle", "tr": "çeviri" },
+    { "name": "Past Continuous (Geçmiş Süregelen)", "en": "was/were doing cümlesi", "tr": "çeviri" },
+    { "name": "Present Perfect (Yakın Geçmiş)", "en": "have/has done cümlesi", "tr": "çeviri" },
+    { "name": "Past Perfect (Uzak Geçmiş)", "en": "had done cümlesi", "tr": "çeviri" },
+    { "name": "Simple Future (Gelecek Zaman)", "en": "will cümlesi", "tr": "çeviri" },
+    { "name": "Simple Past (Geçmiş Zaman)", "en": "past simple cümlesi", "tr": "çeviri" }
+  ]
+}
+
+Kelime sadece isim ise verb alanlarını boş bırak. Sadece fiil ise noun/adj/adv alanlarını boş bırak. Geçersiz alanları JSON'a dahil etme. Her anlam ve cümle doğal, yaygın kullanılan örnekler olsun. Modal cümleler can, could, must, should, would, will vb. içersin. Türkçe çeviriler akıcı ve doğal olsun.`;
+
+let wordData = {};
+let wordList = JSON.parse(localStorage.getItem('wm_wordlist') || '[]');
+let apiKey = localStorage.getItem('wm_apikey') || '';
+let flashIndex = 0;
+let flashFlipped = false;
+let flashKnown = [];
+let flashUnknown = [];
+
+function getApiKey() {
+  return localStorage.getItem('wm_apikey') || '';
+}
+
+function saveApiKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (!k) return showToast('API anahtarı boş olamaz');
+  localStorage.setItem('wm_apikey', k);
+  document.getElementById('apiSection').classList.remove('show');
+  showToast('API anahtarı kaydedildi ✓');
+}
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  const navMap = { search: 0, list: 1, flash: 2 };
+  document.querySelectorAll('.nav-btn')[navMap[name]].classList.add('active');
+  if (name === 'list') renderWordList();
+  if (name === 'flash') initFlash();
+}
+
+async function doSearch() {
+  const word = document.getElementById('searchInput').value.trim();
+  if (!word) return;
+
+  const key = getApiKey();
+  if (!key) {
+    document.getElementById('apiSection').classList.add('show');
+    showToast('Lütfen önce API anahtarınızı girin');
+    return;
+  }
+
+  document.getElementById('searchBtn').disabled = true;
+  document.getElementById('searchBtn').textContent = 'Analiz ediliyor...';
+  document.getElementById('result-area').innerHTML = `
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div>"${word}" analiz ediliyor...</div>
+    </div>`;
+
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ parts: [{ text: `Kelime: "${word}"` }] }],
+        generationConfig: { maxOutputTokens: 2000, temperature: 0.3 }
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'API hatası');
+    }
+
+    const data = await res.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    wordData = parsed;
+    renderResult(parsed);
+  } catch (e) {
+    document.getElementById('result-area').innerHTML = `
+      <div class="loading-card" style="color: var(--red);">
+        Hata: ${e.message}
+      </div>`;
+  } finally {
+    document.getElementById('searchBtn').disabled = false;
+    document.getElementById('searchBtn').textContent = 'Analiz Et →';
+  }
+}
+
+function renderResult(d) {
+  const isSaved = wordList.some(w => w.word === d.word);
+
+  let html = `
+  <div class="result-card">
+    <div class="result-header">
+      <div>
+        <div class="word-main">${d.word}</div>
+        <div class="word-phonetic">${d.phonetic || ''} &nbsp;·&nbsp; ${d.mainMeaning || ''}</div>
+        <div class="word-types">
+          ${(d.types || []).map(t => `<span class="type-badge ${t}">${t}</span>`).join('')}
+        </div>
+      </div>
+      <button class="save-btn ${isSaved ? 'saved' : ''}" id="saveWordBtn" onclick="toggleSave()">
+        ${isSaved ? '✓ Kaydedildi' : '+ Listeme Ekle'}
+      </button>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('forms', this)">Biçimler</button>
+      <button class="tab-btn" onclick="showTab('meanings', this)">Anlamlar</button>
+      <button class="tab-btn" onclick="showTab('sentences', this)">Cümleler</button>
+      <button class="tab-btn" onclick="showTab('tenses', this)">Zamanlar</button>
+    </div>`;
+
+  // FORMS TAB
+  html += `<div class="tab-panel active" id="tab-forms">`;
+
+  if (d.forms?.verb && Object.keys(d.forms.verb).length > 0) {
+    html += `<div class="section-label">Fiil Çekimleri</div>
+    <div class="forms-grid">`;
+    const labels = { v1: 'Base / V1', v2: 'Past Simple / V2', v3: 'Past Participle / V3', ving: '-ing hali', vs: '3. Tekil (-s/-es)' };
+    for (const [k, v] of Object.entries(d.forms.verb)) {
+      if (v) html += `<div class="form-item">
+        <div class="form-item-label">${labels[k] || k}</div>
+        <div class="form-item-word">${v}</div>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  if (d.forms?.noun && Object.keys(d.forms.noun).length > 0) {
+    html += `<div class="section-label">İsim Halleri</div>
+    <div class="forms-grid">`;
+    const labels = { singular: 'Tekil', plural: 'Çoğul' };
+    for (const [k, v] of Object.entries(d.forms.noun)) {
+      if (v) html += `<div class="form-item">
+        <div class="form-item-label">${labels[k] || k}</div>
+        <div class="form-item-word">${v}</div>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  if (d.forms?.adjective && Object.keys(d.forms.adjective).length > 0) {
+    html += `<div class="section-label">Sıfat Dereceleri</div>
+    <div class="forms-grid">`;
+    const labels = { base: 'Temel', comparative: 'Karşılaştırma', superlative: 'Üstünlük' };
+    for (const [k, v] of Object.entries(d.forms.adjective)) {
+      if (v) html += `<div class="form-item">
+        <div class="form-item-label">${labels[k] || k}</div>
+        <div class="form-item-word">${v}</div>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  if (d.forms?.adverb?.form) {
+    html += `<div class="section-label">Zarf Hali</div>
+    <div class="forms-grid">
+      <div class="form-item">
+        <div class="form-item-label">Adverb</div>
+        <div class="form-item-word">${d.forms.adverb.form}</div>
+      </div>
+    </div>`;
+  }
+
+  html += `</div>`;
+
+  // MEANINGS TAB
+  html += `<div class="tab-panel" id="tab-meanings">`;
+  (d.meanings || []).forEach((m, i) => {
+    html += `<div class="meaning-block">
+      <div class="meaning-num">${i + 1}</div>
+      <div class="meaning-en">${m.en}</div>
+      <div class="meaning-tr">→ ${m.tr}</div>
+      ${m.example ? `<div class="meaning-example">"${m.example}"</div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  // SENTENCES TAB
+  html += `<div class="tab-panel" id="tab-sentences">`;
+  const senTypes = [
+    { key: 'positive', label: 'Olumlu Cümleler', cls: 'positive' },
+    { key: 'negative', label: 'Olumsuz Cümleler', cls: 'negative' },
+    { key: 'question', label: 'Soru Cümleleri', cls: 'question' },
+    { key: 'modal', label: 'Modal Yapılar', cls: 'modal' }
+  ];
+  senTypes.forEach(({ key, label, cls }) => {
+    const arr = d.sentences?.[key] || [];
+    if (!arr.length) return;
+    html += `<div class="sentence-group">
+      <div class="sentence-group-title">
+        <div class="dot ${cls}"></div>${label}
+      </div>`;
+    arr.forEach(s => {
+      html += `<div class="sentence-item ${cls}">
+        <div class="sen-en">${s.en}</div>
+        <div class="sen-tr">${s.tr}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+
+  // TENSES TAB
+  html += `<div class="tab-panel" id="tab-tenses">`;
+  (d.tenses || []).forEach(t => {
+    html += `<div class="tense-block">
+      <div class="tense-name">${t.name}</div>
+      <div class="tense-sentence">${t.en}</div>
+      <div class="tense-tr">${t.tr}</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += `</div>`;
+  document.getElementById('result-area').innerHTML = html;
+}
+
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleSave() {
+  if (!wordData.word) return;
+  const idx = wordList.findIndex(w => w.word === wordData.word);
+  if (idx >= 0) {
+    wordList.splice(idx, 1);
+    document.getElementById('saveWordBtn').textContent = '+ Listeme Ekle';
+    document.getElementById('saveWordBtn').classList.remove('saved');
+    showToast('Listeden çıkarıldı');
+  } else {
+    wordList.push({ word: wordData.word, tr: wordData.mainMeaning || '', data: wordData });
+    document.getElementById('saveWordBtn').textContent = '✓ Kaydedildi';
+    document.getElementById('saveWordBtn').classList.add('saved');
+    showToast('Kelime listeye eklendi ✓');
+  }
+  localStorage.setItem('wm_wordlist', JSON.stringify(wordList));
+}
+
+function renderWordList() {
+  const c = document.getElementById('wordlist-container');
+  if (!wordList.length) {
+    c.innerHTML = `<div class="empty-state">
+      <div class="big-icon">📚</div>
+      <div>Henüz kelime eklemediniz</div>
+      <div style="font-size:0.85rem; margin-top:8px;">Kelimeleri arayın ve "Listeme Ekle" butonuna tıklayın</div>
+    </div>`;
+    return;
+  }
+  c.innerHTML = `<div class="wordlist-grid">${wordList.map((w, i) =>
+    `<div class="word-card" onclick="openWord(${i})">
+      <div>
+        <div class="word-card-word">${w.word}</div>
+        <div class="word-card-tr">${w.tr}</div>
+      </div>
+      <button class="word-card-del" onclick="event.stopPropagation(); deleteWord(${i})" title="Sil">×</button>
+    </div>`
+  ).join('')}</div>`;
+}
+
+function openWord(i) {
+  const w = wordList[i];
+  if (w?.data) {
+    wordData = w.data;
+    showView('search');
+    renderResult(w.data);
+    document.getElementById('searchInput').value = w.word;
+  }
+}
+
+function deleteWord(i) {
+  wordList.splice(i, 1);
+  localStorage.setItem('wm_wordlist', JSON.stringify(wordList));
+  renderWordList();
+  showToast('Kelime silindi');
+}
+
+function initFlash() {
+  const c = document.getElementById('flash-container');
+  if (!wordList.length) {
+    c.innerHTML = `<div class="empty-state">
+      <div class="big-icon">🃏</div>
+      <div>Flash kart için kelime listeniz boş</div>
+      <div style="font-size:0.85rem; margin-top:8px;">Önce kelimeleri arayın ve listene ekleyin</div>
+    </div>`;
+    document.getElementById('flash-progress').textContent = '';
+    return;
+  }
+
+  flashIndex = 0;
+  flashFlipped = false;
+  flashKnown = [];
+  flashUnknown = [...wordList];
+  renderFlash();
+}
+
+function renderFlash() {
+  const c = document.getElementById('flash-container');
+  if (!flashUnknown.length) {
+    c.innerHTML = `<div class="loading-card" style="padding: 3rem; text-align: center;">
+      <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎉</div>
+      <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">Tebrikler!</div>
+      <div style="color: var(--muted);">Tüm kelimeleri tamamladınız. Bilinen: ${flashKnown.length}</div>
+      <button class="btn-outline" style="margin-top: 1.5rem;" onclick="initFlash()">Tekrar Başla</button>
+    </div>`;
+    document.getElementById('flash-progress').textContent = '';
+    return;
+  }
+
+  const current = flashUnknown[0];
+  const total = flashKnown.length + flashUnknown.length;
+  const done = flashKnown.length;
+  const pct = Math.round((done / total) * 100);
+
+  document.getElementById('flash-progress').textContent = `${done} / ${total}`;
+
+  c.innerHTML = `
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width: ${pct}%"></div>
+    </div>
+    <div class="flash-scene" id="flashScene" onclick="flipCard()">
+      <div class="flash-inner" id="flashInner">
+        <div class="flash-face front">
+          <div class="flash-tag">İngilizce</div>
+          <div class="flash-word">${current.word}</div>
+          <div class="flash-hint">Türkçesini biliyor musun? Kartı çevir →</div>
+        </div>
+        <div class="flash-face back">
+          <div class="flash-tag">Türkçe</div>
+          <div class="flash-tr">${current.tr}</div>
+          <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--muted);">${current.word}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flash-controls">
+      <button class="flash-btn wrong" onclick="markFlash(false)">✗ Bilmedim</button>
+      <button class="flash-btn" onclick="flipCard()">⟳ Çevir</button>
+      <button class="flash-btn correct" onclick="markFlash(true)">✓ Bildim</button>
+    </div>
+    <div style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--muted);">
+      Kalan: ${flashUnknown.length} kelime
+    </div>`;
+}
+
+function flipCard() {
+  flashFlipped = !flashFlipped;
+  const inner = document.getElementById('flashInner');
+  if (inner) inner.classList.toggle('flipped', flashFlipped);
+}
+
+function markFlash(known) {
+  const word = flashUnknown.shift();
+  if (known) {
+    flashKnown.push(word);
+  } else {
+    flashUnknown.push(word);
+  }
+  flashFlipped = false;
+  showToast(known ? '✓ Harika!' : 'Tekrar çalışılacak');
+  renderFlash();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// Init
+if (!getApiKey()) {
+  document.getElementById('apiSection').classList.add('show');
+}
+</script>
 </body>
 </html>
