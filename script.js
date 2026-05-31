@@ -2,7 +2,6 @@ let words = JSON.parse(localStorage.getItem("words")) || [];
 
 renderWords();
 
-
 async function addWord() {
 
 const input = document.getElementById("wordInput");
@@ -13,9 +12,21 @@ if (!value) return;
 
 const wordData = {
 id: Date.now(),
+
+```
 word: value,
+
 meaning: "Loading...",
-example: "Loading example..."
+
+example: "Loading example...",
+
+v1: value,
+v2: "-",
+v3: "-",
+ing: "-",
+s: "-"
+```
+
 };
 
 words.unshift(wordData);
@@ -47,6 +58,16 @@ wordData.meaning = meaning;
 
 wordData.example = example;
 
+wordData.v1 = value;
+
+wordData.v2 = value + "ed";
+
+wordData.v3 = value + "ed";
+
+wordData.ing = value + "ing";
+
+wordData.s = value + "s";
+
 saveWords();
 
 renderWords();
@@ -66,12 +87,6 @@ renderWords();
 
 }
 }
-
-
-
-
-
-
 
 function deleteWord(id) {
 
@@ -134,6 +149,30 @@ wordList.innerHTML += `
 
     <div class="example">
       "${item.example}"
+    </div>
+
+    <div class="verb-forms">
+
+      <div class="verb-box">
+        V1: ${item.v1}
+      </div>
+
+      <div class="verb-box">
+        V2: ${item.v2}
+      </div>
+
+      <div class="verb-box">
+        V3: ${item.v3}
+      </div>
+
+      <div class="verb-box">
+        ING: ${item.ing}
+      </div>
+
+      <div class="verb-box">
+        S: ${item.s}
+      </div>
+
     </div>
 
   </div>
