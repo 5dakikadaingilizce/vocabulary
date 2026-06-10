@@ -11,34 +11,19 @@
     <style>
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .card { perspective: 1000px; }
-        .card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-        .card-front, .card-back {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .card-back {
-            transform: rotateY(180deg);
-        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 font-sans min-h-screen transition-colors duration-200">
 
     <!-- Header / Navbar -->
-    <header class="bg-indigo-600 text-white shadow-md sticky top-0 z-50">
+    <header class="bg-indigo-600 dark:bg-indigo-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
             <h1 class="text-xl font-bold flex items-center gap-2">
                 <i class="fa-solid fa-graduation-cap text-yellow-300"></i>
-                <span>VocabStation <span class="text-xs bg-indigo-500 px-2 py-0.5 rounded-full">#10 plus</span></span>
+                <span>VocabStation <span class="text-xs bg-indigo-500 dark:bg-indigo-700 px-2 py-0.5 rounded-full">#10 plus</span></span>
             </h1>
             <nav class="flex flex-wrap justify-center gap-2 text-sm">
-                <button onclick="switchTab('add-word')" id="btn-add-word" class="tab-btn active bg-indigo-700 px-3 py-2 rounded-lg font-medium transition hover:bg-indigo-800 cursor-pointer">
+                <button onclick="switchTab('add-word')" id="btn-add-word" class="tab-btn active bg-indigo-700 dark:bg-indigo-800 px-3 py-2 rounded-lg font-medium transition hover:bg-indigo-800 cursor-pointer">
                     <i class="fa-solid fa-plus mr-1"></i> Kelime Ekle
                 </button>
                 <button onclick="switchTab('add-grammar')" id="btn-add-grammar" class="tab-btn bg-indigo-600 px-3 py-2 rounded-lg font-medium transition hover:bg-indigo-700 cursor-pointer">
@@ -53,281 +38,309 @@
                 <button onclick="switchTab('practice')" id="btn-practice" class="tab-btn bg-indigo-600 px-3 py-2 rounded-lg font-medium transition hover:bg-indigo-700 cursor-pointer">
                     <i class="fa-solid fa-dumbbell mr-1"></i> Pratik Yap
                 </button>
+                <!-- Tema Değiştirici Buton -->
+                <button onclick="toggleDarkMode()" class="px-3 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 dark:bg-indigo-800 dark:hover:bg-indigo-700 transition cursor-pointer text-sm" title="Tema Değiştir">
+                    <i id="theme-icon" class="fa-solid fa-moon"></i>
+                </button>
             </nav>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-5xl mx-auto px-4 py-8">
+    <main class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- ALERT MESSAGES -->
-        <div id="alert-box" class="hidden mb-4 p-4 rounded-xl text-sm text-center font-medium transition-all"></div>
+        <!-- SOL / ANA ALAN (Formlar ve Listeler) -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- ALERT MESSAGES -->
+            <div id="alert-box" class="hidden p-4 rounded-xl text-sm text-center font-medium transition-all"></div>
 
-        <!-- TAB 1: KELİME EKLEME FORMU (DİNAMİK ÇOKLU CÜMLELİ) -->
-        <section id="add-word" class="tab-content active bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="border-b border-slate-100 pb-4 mb-6">
-                <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-square-plus text-indigo-500"></i> Yeni Kelime ve Türevlerini Ekle
-                </h2>
-                <p class="text-slate-500 text-sm mt-1">Kelimenin zaman çekimlerini, aile hallerini gir ve altına dilediğin kadar dinamik örnek cümle satırı ekle.</p>
-            </div>
-
-            <form id="word-form" onsubmit="saveWord(event)" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Kelime (V1 / Yalın Hali) *</label>
-                        <input type="text" id="v1" required placeholder="Örn: go" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Türkçe Anlamı *</label>
-                        <input type="text" id="meaning" required placeholder="Örn: gitmek" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition text-sm">
-                    </div>
+            <!-- TAB 1: KELİME EKLEME VE DÜZENLEME FORMU -->
+            <section id="add-word" class="tab-content active bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                <div class="border-b border-slate-100 dark:border-slate-700 pb-4 mb-6">
+                    <h2 id="word-form-title" class="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-square-plus text-indigo-500"></i> Yeni Kelime ve Türevlerini Ekle
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Kelimenin hallerini gir ve altına dilediğin kadar dinamik örnek cümle satırı ekle.</p>
                 </div>
 
-                <div class="bg-slate-50/70 p-4 rounded-xl border border-slate-100">
-                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-3">Fiil Çekimleri & Zaman Halleri</span>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-500 mb-1">Past (V2)</label>
-                            <input type="text" id="v2" placeholder="went" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-500 mb-1">Past Part. (V3)</label>
-                            <input type="text" id="v3" placeholder="gone" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-500 mb-1">-s Form</label>
-                            <input type="text" id="s_form" placeholder="goes" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-500 mb-1">-ing Form</label>
-                            <input type="text" id="ing_form" placeholder="going" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-50/70 p-4 rounded-xl border border-slate-100">
-                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-3">Kelime Ailesi Türevleri</span>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-500 mb-1">İsim Hali (Noun)</label>
-                            <input type="text" id="noun" placeholder="goer" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-500 mb-1">Sıfat Hali (Adjective)</label>
-                            <input type="text" id="adjective" placeholder="ongoing" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-500 mb-1">Zarf Hali (Adverb)</label>
-                            <input type="text" id="adverb" placeholder="-" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DİNAMİK SIRALI CÜMLE İSTASYONU -->
-                <div class="bg-indigo-50/40 p-4 rounded-xl border border-indigo-100 space-y-4">
-                    <div class="flex justify-between items-center border-b border-indigo-100 pb-2">
-                        <div>
-                            <span class="text-xs font-bold text-indigo-800 uppercase tracking-wider block">Boşluk Doldurma Örnek Cümleleri</span>
-                            <p class="text-[11px] text-slate-400 mt-0.5">Gizlenecek yapının yerine 3 alt tire (___) koy.</p>
-                        </div>
-                        <button type="button" onclick="addSentenceRow()" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition flex items-center gap-1 cursor-pointer shadow-sm">
-                            <i class="fa-solid fa-plus"></i> Cümle Ekle
-                        </button>
-                    </div>
+                <form id="word-form" onsubmit="saveWord(event)" class="space-y-6">
+                    <input type="hidden" id="editing-word-id" value="">
                     
-                    <!-- Dinamik satırların dolacağı ana konteyner -->
-                    <div id="dynamic-sentences-container" class="space-y-4">
-                        <!-- İlk satır JS ile otomatik basılacak -->
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition shadow-sm flex items-center justify-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk"></i> Kelimeyi ve Tüm Cümleleri Kaydet
-                </button>
-            </form>
-        </section>
-
-        <!-- TAB 2: GRAMMAR (DİL BİLGİSİ) EKLEME FORMU -->
-        <section id="add-grammar" class="tab-content bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="border-b border-slate-100 pb-4 mb-6">
-                <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-code-commit text-indigo-500"></i> Bağımsız Dil Bilgisi Cümle Düzenleyici
-                </h2>
-                <p class="text-slate-500 text-sm mt-1">10 Modal veya 6 Zaman yapısına uygun bağımsız olumlu, olumsuz veya soru cümleleri ekle.</p>
-            </div>
-
-            <form id="grammar-form" onsubmit="saveGrammar(event)" class="space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Yapı Türü</label>
-                        <select id="g-type" onchange="updateSubCategories()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none">
-                            <option value="modal">Modal (Can, Must, Should...)</option>
-                            <option value="tense">Zaman (Tense - V1, V2, Ving...)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Yapı / Kategori</label>
-                        <select id="g-category" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none">
-                            <!-- JS ile doldurulacak -->
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Cümle Formu</label>
-                        <select id="g-form" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none">
-                            <option value="Olumlu">Olumlu</option>
-                            <option value="Olumsuz">Olumsuz</option>
-                            <option value="Soru">Soru</option>
-                            <option value="Olumsuz Soru">Olumsuz Soru</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="space-y-4 bg-slate-50/50 p-4 rounded-xl border border-slate-100">
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Tam İngilizce Cümle</label>
-                        <input type="text" id="g-english" required placeholder="Örn: You should not leave the room." class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none">
-                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Test Görünümü (Boşluklu Yapı)</label>
-                            <input type="text" id="g-quiz" required placeholder="Örn: You ___ not leave the room." class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Kelime (V1 / Yalın Hali) *</label>
+                            <input type="text" id="v1" required placeholder="Örn: go" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl focus:outline-none focus:border-indigo-500 text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Doğru Cevap (Boşluğa Gelecek Kelime)</label>
-                            <input type="text" id="g-answer" required placeholder="Örn: should" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Türkçe Anlamı *</label>
+                            <input type="text" id="meaning" required placeholder="Örn: gitmek" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl focus:outline-none focus:border-indigo-500 text-sm">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Türkçe Anlamı</label>
-                        <input type="text" id="g-turkish" required placeholder="Örn: Odadan ayrılmamalısın." class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none">
+
+                    <div class="bg-slate-50/70 dark:bg-slate-700/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
+                        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-3">Fiil Çekimleri & Zaman Halleri</span>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Past (V2)</label>
+                                <input type="text" id="v2" placeholder="went" class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Past Part. (V3)</label>
+                                <input type="text" id="v3" placeholder="gone" class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">-s Form</label>
+                                <input type="text" id="s_form" placeholder="goes" class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">-ing Form</label>
+                                <input type="text" id="ing_form" placeholder="going" class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="bg-slate-50/70 dark:bg-slate-700/40 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
+                        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-3">Kelime Ailesi Türevleri</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">İsim Hali (Noun)</label>
+                                <input type="text" id="noun" placeholder="goer" class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Sıfat Hali (Adjective)</label>
+                                <input type="text" id="adjective" placeholder="ongoing" class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Zarf Hali (Adverb)</label>
+                                <input type="text" id="adverb" placeholder="-" class="w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DİNAMİK SIRALI CÜMLE İSTASYONU -->
+                    <div class="bg-indigo-50/40 dark:bg-slate-700/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/50 space-y-4">
+                        <div class="flex justify-between items-center border-b border-indigo-100 dark:border-indigo-900/50 pb-2">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-800 dark:text-indigo-400 uppercase tracking-wider block">Boşluk Doldurma Örnek Cümleleri</span>
+                                <p class="text-[11px] text-slate-400 mt-0.5">Gizlenecek yapının yerine 3 alt tire (___) koy.</p>
+                            </div>
+                            <button type="button" onclick="addSentenceRow()" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition flex items-center gap-1 cursor-pointer shadow-sm">
+                                <i class="fa-solid fa-plus"></i> Cümle Ekle
+                            </button>
+                        </div>
+                        
+                        <div id="dynamic-sentences-container" class="space-y-4">
+                            <!-- Satırlar JS ile basılacak -->
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button type="submit" id="word-submit-btn" class="flex-1 bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-floppy-disk"></i> Kelimeyi ve Tüm Cümleleri Kaydet
+                        </button>
+                        <button type="button" id="cancel-edit-btn" onclick="resetWordForm()" class="hidden bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium px-4 rounded-xl hover:bg-slate-300 transition cursor-pointer">
+                            İptal
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- TAB 2: GRAMMAR (DİL BİLGİSİ) EKLEME FORMU -->
+            <section id="add-grammar" class="tab-content bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                <div class="border-b border-slate-100 dark:border-slate-700 pb-4 mb-6">
+                    <h2 class="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-code-commit text-indigo-500"></i> Bağımsız Dil Bilgisi Cümle Düzenleyici
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Yapılara uygun bağımsız test cümleleri oluştur.</p>
                 </div>
 
-                <button type="submit" class="w-full bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition flex items-center justify-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-folder-plus"></i> Dil Bilgisi Cümlesi Ekle
-                </button>
-            </form>
-        </section>
+                <form id="grammar-form" onsubmit="saveGrammar(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Yapı Türü</label>
+                            <select id="g-type" onchange="updateSubCategories()" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none">
+                                <option value="modal">Modal (Can, Must, Should...)</option>
+                                <option value="tense">Zaman (Tense - V1, V2...)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Yapı / Kategori</label>
+                            <select id="g-category" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none">
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Cümle Formu</label>
+                            <select id="g-form" class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none">
+                                <option value="Olumlu">Olumlu</option>
+                                <option value="Olumsuz">Olumsuz</option>
+                                <option value="Soru">Soru</option>
+                                <option value="Olumsuz Soru">Olumsuz Soru</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <!-- TAB 3: KELİME LİSTESİ -->
-        <section id="word-list" class="tab-content bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                    <div class="space-y-4 bg-slate-50/50 dark:bg-slate-700/30 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Tam İngilizce Cümle</label>
+                            <input type="text" id="g-english" required placeholder="Örn: You should not leave the room." class="w-full px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Test Görünümü (Boşluklu Yapı)</label>
+                                <input type="text" id="g-quiz" required placeholder="Örn: You ___ not leave the room." class="w-full px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Doğru Cevap</label>
+                                <input type="text" id="g-answer" required placeholder="Örn: should" class="w-full px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Türkçe Anlamı</label>
+                            <input type="text" id="g-turkish" required placeholder="Örn: Odadan ayrılmamalısın." class="w-full px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-1 bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-folder-plus"></i> Dil Bilgisi Cümlesi Ekle
+                        </button>
+                        <button type="button" onclick="document.getElementById('grammar-form').reset(); updateSubCategories();" class="bg-rose-500 text-white font-medium px-4 rounded-xl hover:bg-rose-600 transition cursor-pointer flex items-center justify-center gap-1" title="Formu Temizle">
+                            <i class="fa-solid fa-arrow-rotate-left"></i> Formu Temizle
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- TAB 3: KELİME LİSTESİ -->
+            <section id="word-list" class="tab-content bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                <div class="border-b border-slate-100 dark:border-slate-700 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h2 class="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                         <i class="fa-solid fa-book-bookmark text-indigo-500"></i> Kelime Dağarcığım
                     </h2>
-                </div>
-                <button onclick="clearAllWords()" class="text-xs font-semibold px-3 py-2 bg-rose-50 text-rose-700 rounded-lg hover:bg-rose-100 transition flex items-center gap-1 cursor-pointer">
-                    <i class="fa-solid fa-trash-can"></i> Kelimeleri Sıfırla
-                </button>
-            </div>
-            <div id="words-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            <div id="empty-state" class="hidden text-center py-12 text-slate-400">Henüz kelime eklenmemiş.</div>
-        </section>
-
-        <!-- TAB 4: GRAMMAR CÜMLE KÜTÜPHANESİ -->
-        <section id="grammar-list" class="tab-content bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-database text-indigo-500"></i> Dil Bilgisi & Cümle Kütüphanesi
-                    </h2>
-                    <p class="text-slate-500 text-sm mt-1">Eklenen tüm zaman/modal cümlelerini buradan filtrele veya yönet.</p>
-                </div>
-                <button onclick="resetGrammarToDefault()" class="text-xs font-semibold px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg hover:bg-amber-100 transition flex items-center gap-1 cursor-pointer">
-                    <i class="fa-solid fa-arrow-rotate-left"></i> Fabrika Ayarlarına Dön (16 Soru)
-                </button>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <select id="filter-type" onchange="renderGrammarTable()" class="px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs">
-                    <option value="all">Tüm Yapı Türleri</option>
-                    <option value="modal">Sadece Modallar</option>
-                    <option value="tense">Sadece Zamanlar</option>
-                </select>
-                <select id="filter-form" onchange="renderGrammarTable()" class="px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs">
-                    <option value="all">Tüm Cümle Formları</option>
-                    <option value="Olumlu">Olumlu</option>
-                    <option value="Olumsuz">Olumsuz</option>
-                    <option value="Soru">Soru</option>
-                    <option value="Olumsuz Soru">Olumsuz Soru</option>
-                </select>
-                <div class="text-right flex items-center justify-end pr-2 text-xs font-semibold text-slate-500">
-                    Toplam: <span id="grammar-count" class="ml-1 text-indigo-600 font-bold">0</span> &nbsp;Cümle
-                </div>
-            </div>
-
-            <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
-                <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-                            <th class="p-3">Kategori</th>
-                            <th class="p-3">Form</th>
-                            <th class="p-3">İngilizce Cümle (Görünüm)</th>
-                            <th class="p-3">Türkçe Anlamı</th>
-                            <th class="p-3 text-center">İşlem</th>
-                        </tr>
-                    </thead>
-                    <tbody id="grammar-table-body" class="divide-y divide-slate-100 bg-white">
-                        <!-- JS ile doldurulacak -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- TAB 5: PRATİK YAPMA VE SINAV ALANI -->
-        <section id="practice" class="tab-content bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-play text-indigo-500"></i> Akıllı Alıştırma Merkezi
-                    </h2>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="setQuizMode('word')" id="mode-word" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-600 cursor-pointer">Kelime Örnekleri</button>
-                    <button onclick="setQuizMode('grammar')" id="mode-grammar" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-600 cursor-pointer">Dil Bilgisi / Cümle Havuzu</button>
-                </div>
-            </div>
-
-            <div id="quiz-area" class="space-y-6">
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                    <div class="flex justify-between items-center mb-4">
-                        <span id="quiz-type-badge" class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full">Yükleniyor</span>
-                        <div class="flex items-center gap-1 text-amber-600 font-semibold text-sm">
-                            <i class="fa-solid fa-star"></i> <span id="score-counter">0</span> Puan
-                        </div>
-                    </div>
-
-                    <div class="my-6">
-                        <p id="quiz-sentence" class="text-base sm:text-xl font-medium text-slate-800 leading-relaxed text-center"></p>
-                        <p id="quiz-hint" class="text-xs text-slate-400 text-center mt-2 italic"></p>
-                    </div>
-
-                    <div class="max-w-md mx-auto flex gap-2">
-                        <input type="text" id="quiz-input" placeholder="Cevabınızı yazın..." class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 text-sm shadow-inner">
-                        <button onclick="checkAnswer()" class="bg-indigo-600 text-white px-5 rounded-xl font-medium text-sm hover:bg-indigo-700 transition cursor-pointer">Kontrol Et</button>
-                    </div>
-                    
-                    <div id="quiz-feedback" class="hidden text-center mt-4 text-sm font-semibold p-3 rounded-xl transition-all"></div>
-                </div>
-
-                <div class="border border-slate-100 rounded-xl p-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-                    <div class="text-center sm:text-left">
-                        <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Sesli Telaffuz İstasyonu</span>
-                        <span id="pronounce-word" class="font-bold text-slate-800 text-base">Yükleniyor...</span>
-                    </div>
-                    <button onclick="speakCurrentWord()" class="w-full sm:w-auto px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium text-sm rounded-lg flex items-center justify-center gap-2 transition cursor-pointer">
-                        <i class="fa-solid fa-volume-high text-indigo-500"></i> Dinle
+                    <button onclick="clearAllWords()" class="text-xs font-semibold px-3 py-2 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-950/60 transition flex items-center gap-1 cursor-pointer">
+                        <i class="fa-solid fa-trash-can"></i> Tüm Kelimeleri Sıfırla
                     </button>
                 </div>
-            </div>
+                <div id="words-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                <div id="empty-state" class="hidden text-center py-12 text-slate-400">Henüz kelime eklenmemiş.</div>
+            </section>
 
-            <div id="quiz-empty-state" class="hidden text-center py-12 text-slate-400">
-                <i class="fa-solid fa-circle-exclamation text-4xl mb-3 block text-amber-400"></i>
-                <p class="text-sm" id="empty-state-text">Seçilen modda alıştırma yapabilmek için uygun cümle bulunamadı.</p>
+            <!-- TAB 4: GRAMMAR CÜMLE KÜTÜPHANESİ -->
+            <section id="grammar-list" class="tab-content bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                <div class="border-b border-slate-100 dark:border-slate-700 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-database text-indigo-500"></i> Dil Bilgisi & Cümle Kütüphanesi
+                        </h2>
+                    </div>
+                    <button onclick="resetGrammarToDefault()" class="text-xs font-semibold px-3 py-2 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 rounded-lg transition flex items-center gap-1 cursor-pointer">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> Fabrika Ayarlarına Dön
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border border-slate-100 dark:border-slate-600">
+                    <select id="filter-type" onchange="renderGrammarTable()" class="px-2 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-xs">
+                        <option value="all">Tüm Yapı Türleri</option>
+                        <option value="modal">Sadece Modallar</option>
+                        <option value="tense">Sadece Zamanlar</option>
+                    </select>
+                    <select id="filter-form" onchange="renderGrammarTable()" class="px-2 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-xs">
+                        <option value="all">Tüm Cümle Formları</option>
+                        <option value="Olumlu">Olumlu</option>
+                        <option value="Olumsuz">Olumsuz</option>
+                        <option value="Soru">Soru</option>
+                        <option value="Olumsuz Soru">Olumsuz Soru</option>
+                    </select>
+                    <div class="text-right flex items-center justify-end pr-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        Toplam: <span id="grammar-count" class="ml-1 text-indigo-600 dark:text-indigo-400 font-bold">0</span> &nbsp;Cümle
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold border-b border-slate-200 dark:border-slate-600">
+                                <th class="p-3">Kategori</th>
+                                <th class="p-3">Form</th>
+                                <th class="p-3">İngilizce Cümle</th>
+                                <th class="p-3">Türkçe Anlamı</th>
+                                <th class="p-3 text-center">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="grammar-table-body" class="divide-y divide-slate-100 dark:divide-slate-700 bg-white dark:bg-slate-800">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB 5: PRATİK YAPMA VE SINAV ALANI -->
+            <section id="practice" class="tab-content bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                <div class="border-b border-slate-100 dark:border-slate-700 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h2 id="practice-title" class="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-circle-play text-indigo-500"></i> Akıllı Alıştırma Merkezi
+                    </h2>
+                    <div id="practice-modes-nav" class="flex gap-2">
+                        <button onclick="setQuizMode('word')" id="mode-word" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 cursor-pointer">Kelime Örnekleri</button>
+                        <button onclick="setQuizMode('grammar')" id="mode-grammar" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 cursor-pointer">Dil Bilgisi / Cümle Havuzu</button>
+                    </div>
+                </div>
+
+                <div id="quiz-area" class="space-y-6">
+                    <div class="bg-slate-50 dark:bg-slate-700/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700">
+                        <div class="flex justify-between items-center mb-4">
+                            <span id="quiz-type-badge" class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded-full">Yükleniyor</span>
+                            <div class="flex items-center gap-1 text-amber-600 font-semibold text-sm">
+                                <i class="fa-solid fa-star"></i> <span id="score-counter">0</span> Puan
+                            </div>
+                        </div>
+
+                        <div class="my-6">
+                            <!-- Cevap kesinlikle burada veya altta yazmıyor -->
+                            <p id="quiz-sentence" class="text-base sm:text-xl font-medium text-slate-800 dark:text-white leading-relaxed text-center"></p>
+                            <p id="quiz-hint" class="text-xs text-slate-400 text-center mt-2 italic"></p>
+                        </div>
+
+                        <div class="max-w-md mx-auto flex gap-2">
+                            <input type="text" id="quiz-input" placeholder="Cevabınızı buraya yazın..." class="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl focus:outline-none focus:border-indigo-500 text-sm shadow-inner text-slate-800 dark:text-white">
+                            <button onclick="checkAnswer()" class="bg-indigo-600 text-white px-5 rounded-xl font-medium text-sm hover:bg-indigo-700 transition cursor-pointer whitespace-nowrap">Kontrol Et</button>
+                        </div>
+                        
+                        <div id="quiz-feedback" class="hidden text-center mt-4 text-sm font-semibold p-3 rounded-xl transition-all"></div>
+                    </div>
+
+                    <div class="border border-slate-100 dark:border-slate-700 rounded-xl p-4 flex justify-between items-center gap-3">
+                        <div>
+                            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Sesli Telaffuz İstasyonu</span>
+                            <span class="text-xs text-slate-500 italic">Doğru cevabı bulduktan sonra telaffuzu dinleyebilirsin.</span>
+                        </div>
+                        <button onclick="speakCurrentWord()" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 font-medium text-sm rounded-lg flex items-center justify-center gap-2 transition cursor-pointer">
+                            <i class="fa-solid fa-volume-high text-indigo-500"></i> Dinle
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quiz-empty-state" class="hidden text-center py-12 text-slate-400">
+                    <i class="fa-solid fa-circle-exclamation text-4xl mb-3 block text-amber-400"></i>
+                    <p class="text-sm" id="empty-state-text">Seçilen modda alıştırma yapabilmek için uygun cümle bulunamadı.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- SAĞ PANEL: DETAYLI KELİME GÖRÜNÜMÜ & PANELİ -->
+        <div class="lg:col-span-1">
+            <div class="sticky top-20 bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
+                <div class="border-b border-slate-100 dark:border-slate-700 pb-3">
+                    <h3 class="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-chart text-indigo-500"></i> Kelime İnceleme Paneli
+                    </h3>
+                </div>
+                
+                <div id="detail-panel-content" class="text-slate-400 text-center py-8 text-xs">
+                    Kelimelerim listesinden bir kelimeye tıklayarak tüm detaylarını, çekimlerini görebilir ve ona özel pratik başlatabilirsin.
+                </div>
             </div>
-        </section>
+        </div>
 
     </main>
 
@@ -347,39 +360,50 @@
             { id: 7, type: "modal", category: "would", form: "Olumlu", english: "I would like a cup of coffee.", quiz: "I ___ like a cup of coffee.", answer: "would", turkish: "Bir fincan kahve isterim." },
             { id: 8, type: "modal", category: "have to", form: "Olumlu", english: "I have to work tomorrow.", quiz: "I ___ to work tomorrow.", answer: "have", turkish: "Yarın çalışmak zorundayım." },
             { id: 9, type: "tense", category: "Geniş Zaman (V1)", form: "Olumlu", english: "She lives in London.", quiz: "She ___ (live) in London.", answer: "lives", turkish: "O, Londra'da yaşar." },
-            { id: 10, type: "tense", category: "Geniş Zaman (V1)", form: "Olumsuz", english: "They do not know the answer.", quiz: "They ___ not know the answer.", answer: "do", turkish: "Onlar cevabı bilmiyorlar." },
-            { id: 11, type: "tense", category: "Şimdiki Zaman (Ving)", form: "Olumlu", english: "We are learning coding now.", quiz: "We ___ learning coding now.", answer: "are", turkish: "Şu an kodlama öğreniyoruz." },
-            { id: 12, type: "tense", category: "Yakın Geçmiş (Have V3)", form: "Olumlu", english: "I have lost my keys.", quiz: "I ___ lost my keys.", answer: "have", turkish: "Anahtarlarımı kaybettim." },
-            { id: 13, type: "tense", category: "Geçmiş Zaman (V2)", form: "Olumlu", english: "They went to the cinema yesterday.", quiz: "They ___ (go) to the cinema yesterday.", answer: "went", turkish: "Dün sinemaya gittiler." },
-            { id: 14, type: "tense", category: "Geçmiş Zaman (V2)", form: "Soru", english: "Did you watch the match?", quiz: "___ you watch the match?", answer: "did", turkish: "Maçı izledin mi?" },
-            { id: 15, type: "tense", category: "Sürekli Geçmiş (Was/Were Ving)", form: "Olumlu", english: "It was raining all night.", quiz: "It ___ raining all night.", answer: "was", turkish: "Tüm gece yağmur yağıyordu." },
-            { id: 16, type: "tense", category: "Miş'li Geçmiş (Had V3)", form: "Olumlu", english: "The train had left when I arrived.", quiz: "The train ___ left when I arrived.", answer: "had", turkish: "Geldiğimde tren çoktan kalkmıştı." }
+            { id: 10, type: "tense", category: "Geniş Zaman (V1)", form: "Olumsuz", english: "They do not know the answer.", quiz: "They ___ not know the answer.", answer: "do", turkish: "Onlar cevabı bilmiyorlar." }
         ];
 
         let words = JSON.parse(localStorage.getItem('vocab_words')) || [];
         let grammarList = JSON.parse(localStorage.getItem('grammar_list')) || defaultGrammarList;
-        if(!localStorage.getItem('grammar_list')) {
-            localStorage.setItem('grammar_list', JSON.stringify(defaultGrammarList));
-        }
-
         let score = parseInt(localStorage.getItem('vocab_score')) || 0;
+        
         let quizMode = 'grammar'; 
+        let specialQuizWordId = null; // Özel kelime pratiği için filtre id'si
         let currentQuestion = null;
         let sentenceRowCount = 0;
 
+        // Dark Mode Başlangıç Kontrolü
+        if (localStorage.getItem('dark_mode') === 'enabled') {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').className = "fa-solid fa-sun";
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             updateSubCategories();
-            // Açılışta kelime formuna ilk cümle satırını otomatik ekle
             addSentenceRow();
             renderWords();
             renderGrammarTable();
             document.getElementById('score-counter').innerText = score;
         });
 
-        // BAĞIMSIZ CÜMLE PANELİ KATEGORİ TETİKLEYİCİSİ
+        // TEMA DEĞİŞTİRME MOTORU
+        function toggleDarkMode() {
+            const icon = document.getElementById('theme-icon');
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                icon.className = "fa-solid fa-moon";
+                localStorage.setItem('dark_mode', 'disabled');
+            } else {
+                document.documentElement.classList.add('dark');
+                icon.className = "fa-solid fa-sun";
+                localStorage.setItem('dark_mode', 'enabled');
+            }
+        }
+
         function updateSubCategories() {
             const type = document.getElementById('g-type').value;
             const catSelect = document.getElementById('g-category');
+            if(!catSelect) return;
             catSelect.innerHTML = '';
             categories[type].forEach(cat => {
                 const opt = document.createElement('option');
@@ -387,12 +411,10 @@
             });
         }
 
-        // DİNAMİK SATIRLAR İÇİN ALT KATEGORİ TETİKLEYİCİSİ
         function updateRowSubCategories(rowId) {
             const typeSelect = document.getElementById(`w-g-type-${rowId}`);
             const catSelect = document.getElementById(`w-g-category-${rowId}`);
             if(!typeSelect || !catSelect) return;
-            
             const type = typeSelect.value;
             catSelect.innerHTML = '';
             categories[type].forEach(cat => {
@@ -401,36 +423,29 @@
             });
         }
 
-        // YENİ CÜMLE SATIRI EKLEME (ÇÖP KUTUSUYLA BERABER)
         function addSentenceRow() {
             sentenceRowCount++;
             const container = document.getElementById('dynamic-sentences-container');
-            
             const rowDiv = document.createElement('div');
             rowDiv.id = `sentence-row-${sentenceRowCount}`;
-            rowDiv.className = "p-3 bg-white border border-slate-200 rounded-xl space-y-2 relative shadow-sm transition-all";
+            rowDiv.className = "p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl space-y-2 relative shadow-sm";
             
             rowDiv.innerHTML = `
-                <!-- Çöp Kutusu Butonu -->
-                <button type="button" onclick="removeSentenceRow(${sentenceRowCount})" class="absolute top-2 right-2 text-rose-500 hover:text-rose-700 p-1 text-sm cursor-pointer transition-colors" title="Bu Cümleyi Kaldır">
+                <button type="button" onclick="removeSentenceRow(${sentenceRowCount})" class="absolute top-2 right-2 text-rose-500 hover:text-rose-700 p-1 text-sm cursor-pointer" title="Kaldır">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
-
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pr-6">
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Yapı Türü</label>
-                        <select id="w-g-type-${sentenceRowCount}" onchange="updateRowSubCategories(${sentenceRowCount})" class="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium">
+                        <select id="w-g-type-${sentenceRowCount}" onchange="updateRowSubCategories(${sentenceRowCount})" class="w-full px-2 py-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs">
                             <option value="modal">Modal</option>
                             <option value="tense">Zaman (Tense)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Kategori / Zaman</label>
-                        <select id="w-g-category-${sentenceRowCount}" class="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium"></select>
+                        <select id="w-g-category-${sentenceRowCount}" class="w-full px-2 py-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs"></select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Cümle Formu</label>
-                        <select id="w-g-form-${sentenceRowCount}" class="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium">
+                        <select id="w-g-form-${sentenceRowCount}" class="w-full px-2 py-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs">
                             <option value="Olumlu">Olumlu</option>
                             <option value="Olumsuz">Olumsuz</option>
                             <option value="Soru">Soru</option>
@@ -438,50 +453,50 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="space-y-1.5 pt-1">
-                    <input type="text" id="w-sentence-text-${sentenceRowCount}" placeholder="Cümle Görünümü. Örn: He ___ (go) to school yesterday." class="w-full px-3 py-1.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs">
+                <div class="space-y-1.5">
+                    <input type="text" id="w-sentence-text-${sentenceRowCount}" placeholder="Cümle: He ___ to school yesterday." class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-white">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <input type="text" id="w-sentence-ans-${sentenceRowCount}" placeholder="Doğru Cevap: went" class="w-full px-3 py-1.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs">
-                        <input type="text" id="w-sentence-tur-${sentenceRowCount}" placeholder="Türkçe Anlamı: Dün okula gitti." class="w-full px-3 py-1.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs">
+                        <input type="text" id="w-sentence-ans-${sentenceRowCount}" placeholder="Cevap: went" class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-white">
+                        <input type="text" id="w-sentence-tur-${sentenceRowCount}" placeholder="Türkçe Çeviri" class="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-800 dark:text-white">
                     </div>
                 </div>
             `;
-            
             container.appendChild(rowDiv);
             updateRowSubCategories(sentenceRowCount);
         }
 
-        // SATIRI ÇÖP KUTUSUYLA SİLME
         function removeSentenceRow(rowId) {
             const row = document.getElementById(`sentence-row-${rowId}`);
-            if(row) {
-                row.remove();
-            }
+            if(row) row.remove();
         }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('active', 'bg-indigo-700'); el.classList.add('bg-indigo-600');
+                el.classList.remove('active', 'bg-indigo-700', 'dark:bg-indigo-800');
+                el.classList.add('bg-indigo-600');
             });
 
             document.getElementById(tabId).classList.add('active');
             const activeBtn = document.getElementById(`btn-${tabId}`);
-            if(activeBtn) activeBtn.classList.add('active', 'bg-indigo-700');
+            if(activeBtn) activeBtn.classList.add('active', 'bg-indigo-700', 'dark:bg-indigo-800');
 
             if (tabId === 'word-list') renderWords();
             if (tabId === 'grammar-list') renderGrammarTable();
-            if (tabId === 'practice') generateQuestion();
+            if (tabId === 'practice' && !specialQuizWordId) {
+                document.getElementById('practice-title').innerHTML = `<i class="fa-solid fa-circle-play text-indigo-500"></i> Akıllı Alıştırma Merkezi`;
+                document.getElementById('practice-modes-nav').classList.remove('hidden');
+                generateQuestion();
+            }
         }
 
         function showAlert(msg, type = 'success') {
             const alertBox = document.getElementById('alert-box');
             alertBox.innerText = msg;
-            alertBox.className = `block mb-4 p-4 rounded-xl text-sm text-center font-medium transition-all `;
-            if (type === 'success') alertBox.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-100');
-            else if (type === 'warning') alertBox.classList.add('bg-amber-50', 'text-amber-800', 'border', 'border-amber-100');
-            else alertBox.classList.add('bg-rose-50', 'text-rose-800', 'border', 'border-rose-100');
+            alertBox.className = `p-4 rounded-xl text-sm text-center font-medium transition-all block mb-4 `;
+            if (type === 'success') alertBox.classList.add('bg-emerald-50', 'text-emerald-800', 'dark:bg-emerald-950/40', 'dark:text-emerald-300');
+            else if (type === 'warning') alertBox.classList.add('bg-amber-50', 'text-amber-800', 'dark:bg-amber-950/40', 'dark:text-amber-300');
+            else alertBox.classList.add('bg-rose-50', 'text-rose-800', 'dark:bg-rose-950/40', 'dark:text-rose-300');
             setTimeout(() => { alertBox.classList.add('hidden'); }, 3000);
         }
 
@@ -496,17 +511,18 @@
         }
 
         function speakCurrentWord() {
-            if (currentQuestion && currentQuestion.speechText) speak(currentQuestion.speechText);
+            if (currentQuestion && currentQuestion.fullText) speak(currentQuestion.fullText);
         }
 
-        // TOPLU KELİME VE ÇOKLU CÜMLE KAYIT MOTORU
+        // KELİME KAYDETME VE GÜNCELLEME MOTORU
         function saveWord(e) {
             e.preventDefault();
+            const editingId = document.getElementById('editing-word-id').value;
             const v1Val = document.getElementById('v1').value.trim().toLowerCase();
             const meaningVal = document.getElementById('meaning').value.trim();
             
-            const newWord = {
-                id: Date.now(),
+            let targetWord = {
+                id: editingId ? parseInt(editingId) : Date.now(),
                 v1: v1Val,
                 meaning: meaningVal,
                 v2: document.getElementById('v2').value.trim().toLowerCase(),
@@ -519,14 +535,12 @@
                 sentences: []
             };
 
-            // Form içindeki mevcut tüm dinamik satır elementlerini bulup tara
             const container = document.getElementById('dynamic-sentences-container');
             const rows = container.children;
-            let addedSentencesCount = 0;
 
             for (let i = 0; i < rows.length; i++) {
                 const idAttr = rows[i].id; 
-                const numIndex = idAttr.replace('sentence-row-', ''); // Satır numarası indexini yakala
+                const numIndex = idAttr.replace('sentence-row-', '');
 
                 const sText = document.getElementById(`w-sentence-text-${numIndex}`).value.trim();
                 const sAns = document.getElementById(`w-sentence-ans-${numIndex}`).value.trim().toLowerCase();
@@ -536,38 +550,80 @@
                 const sForm = document.getElementById(`w-g-form-${numIndex}`).value;
 
                 if (sText && sAns) {
-                    addedSentencesCount++;
-                    const sentenceObj = { text: sText, answer: sAns, turkish: sTur, type: sType, category: sCat, form: sForm };
-                    newWord.sentences.push(sentenceObj);
-
-                    // Global Dil Bilgisi Havuzuna da aktar
-                    grammarList.push({
-                        id: Date.now() + Math.random(),
-                        type: sType,
-                        category: sCat,
-                        form: sForm,
-                        english: sText.replace("___", sAns),
-                        quiz: sText,
-                        answer: sAns,
-                        turkish: sTur || `${v1Val} kelimesi alıştırması.`
-                    });
+                    targetWord.sentences.push({ text: sText, answer: sAns, turkish: sTur, type: sType, category: sCat, form: sForm });
                 }
             }
 
-            words.push(newWord);
-            localStorage.setItem('vocab_words', JSON.stringify(words));
-            localStorage.setItem('grammar_list', JSON.stringify(grammarList));
+            if (editingId) {
+                words = words.map(w => w.id === targetWord.id ? targetWord : w);
+                showAlert(`"${targetWord.v1}" başarıyla güncellendi.`);
+            } else {
+                words.push(targetWord);
+                showAlert(`"${targetWord.v1}" ve cümleleri başarıyla eklendi.`);
+            }
 
-            showAlert(`"${newWord.v1}" kelimesi ve yazdığın ${addedSentencesCount} adet cümle tek seferde kaydedildi.`);
-            
-            // Formu temizle ve tek bir boş cümle satırı açarak düzeni koru
+            localStorage.setItem('vocab_words', JSON.stringify(words));
+            resetWordForm();
+            renderWords();
+        }
+
+        function resetWordForm() {
             document.getElementById('word-form').reset();
+            document.getElementById('editing-word-id').value = '';
+            document.getElementById('word-form-title').innerHTML = `<i class="fa-solid fa-square-plus text-indigo-500"></i> Yeni Kelime ve Türevlerini Ekle`;
+            document.getElementById('word-submit-btn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Kelimeyi ve Tüm Cümleleri Kaydet`;
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+            
+            const container = document.getElementById('dynamic-sentences-container');
             container.innerHTML = '';
             sentenceRowCount = 0;
             addSentenceRow();
         }
 
-        // BAĞIMSIZ DİL BİLGİSİ CÜMLESİ KAYDETME
+        // KART DÜZENLEME MODU TETİKLEYİCİSİ
+        function editWord(id, event) {
+            if(event) event.stopPropagation();
+            const word = words.find(w => w.id === id);
+            if(!word) return;
+
+            switchTab('add-word');
+            
+            document.getElementById('editing-word-id').value = word.id;
+            document.getElementById('word-form-title').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-500"></i> "${word.v1}" Kelimesini Düzenle`;
+            document.getElementById('word-submit-btn').innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Değişiklikleri Güncelle`;
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+
+            document.getElementById('v1').value = word.v1;
+            document.getElementById('meaning').value = word.meaning;
+            document.getElementById('v2').value = word.v2;
+            document.getElementById('v3').value = word.v3;
+            document.getElementById('s_form').value = word.s_form;
+            document.getElementById('ing_form').value = word.ing_form;
+            document.getElementById('noun').value = word.noun;
+            document.getElementById('adjective').value = word.adjective;
+            document.getElementById('adverb').value = word.adverb;
+
+            const container = document.getElementById('dynamic-sentences-container');
+            container.innerHTML = '';
+            sentenceRowCount = 0;
+
+            if(word.sentences && word.sentences.length > 0) {
+                word.sentences.forEach(s => {
+                    addSentenceRow();
+                    const index = sentenceRowCount;
+                    document.getElementById(`w-sentence-text-${index}`).value = s.text;
+                    document.getElementById(`w-sentence-ans-${index}`).value = s.answer;
+                    document.getElementById(`w-sentence-tur-${index}`).value = s.turkish;
+                    document.getElementById(`w-g-type-${index}`).value = s.type;
+                    updateRowSubCategories(index);
+                    document.getElementById(`w-g-category-${index}`).value = s.category;
+                    document.getElementById(`w-g-form-${index}`).value = s.form;
+                });
+            } else {
+                addSentenceRow();
+            }
+        }
+
         function saveGrammar(e) {
             e.preventDefault();
             const newGrammar = {
@@ -583,11 +639,12 @@
 
             grammarList.push(newGrammar);
             localStorage.setItem('grammar_list', JSON.stringify(grammarList));
-            showAlert("Yeni dil bilgisi cümlesi kütüphaneye eklendi!");
+            showAlert("Dil bilgisi cümlesi kütüphaneye eklendi!");
             document.getElementById('grammar-form').reset();
             updateSubCategories();
         }
 
+        // KELİMELERİ LİSTELEME
         function renderWords() {
             const container = document.getElementById('words-container');
             const empty = document.getElementById('empty-state');
@@ -597,69 +654,118 @@
 
             words.forEach(w => {
                 const card = document.createElement('div');
-                card.className = 'card bg-white border border-slate-200 rounded-2xl h-60 cursor-pointer relative';
-                
-                const getAudioBtn = (text) => {
-                    if(!text || text === '-') return '';
-                    return `<button onclick="event.stopPropagation(); speak('${text}')" class="ml-1 text-indigo-500 hover:text-indigo-700 pointer-events-auto"><i class="fa-solid fa-volume-high text-[11px]"></i></button>`;
-                };
+                card.className = 'p-4 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 transition-all cursor-pointer flex flex-col justify-between h-36';
+                card.onclick = () => showDetailPanel(w.id);
 
                 card.innerHTML = `
-                    <div class="card-inner relative w-full h-full duration-500 pointer-events-none">
-                        <div class="card-front absolute w-full h-full p-4 bg-white rounded-2xl flex flex-col justify-between shadow-sm">
-                            <div>
-                                <div class="flex justify-between items-center border-b border-slate-100 pb-1">
-                                    <h3 class="text-base font-bold capitalize flex items-center">
-                                        ${w.v1} ${getAudioBtn(w.v1)}
-                                    </h3>
-                                    <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded-full text-slate-500 font-mono">V1 Halleri</span>
-                                </div>
-                                
-                                <div class="grid grid-cols-2 gap-x-2 gap-y-1 mt-3 text-xs font-mono text-slate-600 bg-slate-50 p-2 rounded-xl border border-slate-100">
-                                    <div class="flex items-center justify-between"><span>V2: <b class="text-slate-800 font-sans">${w.v2||'-'}</b></span>${getAudioBtn(w.v2)}</div>
-                                    <div class="flex items-center justify-between"><span>V3: <b class="text-slate-800 font-sans">${w.v3||'-'}</b></span>${getAudioBtn(w.v3)}</div>
-                                    <div class="flex items-center justify-between"><span>-s: <b class="text-slate-800 font-sans">${w.s_form||'-'}</b></span>${getAudioBtn(w.s_form)}</div>
-                                    <div class="flex items-center justify-between"><span>-ing: <b class="text-slate-800 font-sans">${w.ing_form||'-'}</b></span>${getAudioBtn(w.ing_form)}</div>
-                                </div>
-
-                                <div class="grid grid-cols-3 gap-1 mt-3 border-t border-slate-100 pt-2 text-[10px] text-slate-500">
-                                    <div class="bg-indigo-50/40 p-1 rounded flex flex-col justify-between">
-                                        <span><b>Noun:</b> <span class="text-slate-700 block truncate">${w.noun||'-'}</span></span>
-                                        <div class="text-right mt-0.5">${getAudioBtn(w.noun)}</div>
-                                    </div>
-                                    <div class="bg-indigo-50/40 p-1 rounded flex flex-col justify-between">
-                                        <span><b>Adj:</b> <span class="text-slate-700 block truncate">${w.adjective||'-'}</span></span>
-                                        <div class="text-right mt-0.5">${getAudioBtn(w.adjective)}</div>
-                                    </div>
-                                    <div class="bg-indigo-50/40 p-1 rounded flex flex-col justify-between">
-                                        <span><b>Adv:</b> <span class="text-slate-700 block truncate">${w.adverb||'-'}</span></span>
-                                        <div class="text-right mt-0.5">${getAudioBtn(w.adverb)}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-between items-center text-xs text-slate-400 mt-2">
-                                <span class="font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md text-[10px]">${w.sentences.length} Örnek Cümle</span>
-                                <button onclick="event.stopPropagation(); deleteWord(${w.id})" class="text-rose-500 hover:text-rose-700 pointer-events-auto p-1"><i class="fa-regular fa-trash-can"></i></button>
-                            </div>
+                    <div>
+                        <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-600 pb-1">
+                            <h3 class="font-bold text-base capitalize text-slate-900 dark:text-white flex items-center gap-1">
+                                ${w.v1}
+                                <button onclick="event.stopPropagation(); speak('${w.v1}')" class="text-indigo-500 hover:text-indigo-700 text-xs"><i class="fa-solid fa-volume-high"></i></button>
+                            </h3>
+                            <span class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md">${w.meaning}</span>
                         </div>
-                        
-                        <div class="card-back absolute w-full h-full p-4 bg-indigo-600 rounded-2xl flex flex-col justify-center items-center text-white text-center shadow-md">
-                            <i class="fa-solid fa-language text-2xl mb-2 opacity-50"></i>
-                            <p class="font-bold text-base px-2 leading-snug">${w.meaning}</p>
-                            <span class="text-[10px] mt-4 text-indigo-200 uppercase tracking-widest font-semibold">Çevirmek İçin Tıkla</span>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-2 font-mono">
+                            V2: ${w.v2 || '-'} | V3: ${w.v3 || '-'} | Noun: ${w.noun || '-'}
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center text-xs mt-2 pt-2 border-t border-slate-200 dark:border-slate-600">
+                        <span class="text-slate-400 text-[11px]"><i class="fa-regular fa-comment-dots"></i> ${w.sentences.length} Cümle</span>
+                        <div class="flex gap-2">
+                            <button onclick="editWord(${w.id}, event)" class="text-blue-500 hover:text-blue-700 px-1" title="Düzenle"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="event.stopPropagation(); deleteWord(${w.id})" class="text-rose-500 hover:text-rose-700 px-1" title="Sil"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                 `;
-                card.addEventListener('click', function() { this.classList.toggle('flipped'); });
                 container.appendChild(card);
             });
+        }
+
+        // KELİME DETAY PANELİNİ SAĞ TARAFTA GÖSTERME
+        function showDetailPanel(id) {
+            const word = words.find(w => w.id === id);
+            const panel = document.getElementById('detail-panel-content');
+            if(!word) return;
+
+            let sentenceHtml = '';
+            if(word.sentences && word.sentences.length > 0) {
+                word.sentences.forEach(s => {
+                    sentenceHtml += `
+                        <div class="p-2 bg-slate-50 dark:bg-slate-700 rounded-lg border border-slate-100 dark:border-slate-600 text-xs">
+                            <p class="font-medium text-slate-800 dark:text-slate-200">${s.text.replace("___", `<u>${s.answer}</u>`)}</p>
+                            <p class="text-[11px] text-slate-400 italic mt-0.5">Anlamı: ${s.turkish || '-'}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                sentenceHtml = `<p class="text-slate-400 text-center py-2">Bu kelimeye ait örnek cümle bulunamadı.</p>`;
+            }
+
+            panel.innerHTML = `
+                <div class="space-y-4 text-left">
+                    <div class="text-center bg-indigo-50 dark:bg-indigo-950/40 p-3 rounded-xl border border-indigo-100 dark:border-indigo-900/50">
+                        <h4 class="text-xl font-black text-indigo-900 dark:text-indigo-300 capitalize flex items-center justify-center gap-1">
+                            ${word.v1}
+                            <button onclick="speak('${word.v1}')" class="text-sm text-indigo-500 hover:text-indigo-700"><i class="fa-solid fa-volume-high"></i></button>
+                        </h4>
+                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-400 mt-0.5">${word.meaning}</p>
+                    </div>
+
+                    <div class="bg-slate-50/50 dark:bg-slate-700/30 p-2.5 rounded-xl space-y-1 text-xs">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Zaman Çekimleri</span>
+                        <div><b>V2 (Past):</b> ${word.v2 || '-'}</div>
+                        <div><b>V3 (Participle):</b> ${word.v3 || '-'}</div>
+                        <div><b>-s Form:</b> ${word.s_form || '-'}</div>
+                        <div><b>-ing Form:</b> ${word.ing_form || '-'}</div>
+                    </div>
+
+                    <div class="bg-slate-50/50 dark:bg-slate-700/30 p-2.5 rounded-xl space-y-1 text-xs">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kelime Ailesi</span>
+                        <div><b>Noun:</b> ${word.noun || '-'}</div>
+                        <div><b>Adjective:</b> ${word.adjective || '-'}</div>
+                        <div><b>Adverb:</b> ${word.adverb || '-'}</div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kayıtlı Cümleleri</span>
+                        <div class="space-y-2 max-h-48 overflow-y-auto pr-1">${sentenceHtml}</div>
+                    </div>
+
+                    <button onclick="startSpecialWordPractice(${word.id})" class="w-full mt-2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1 shadow-sm cursor-pointer">
+                        <i class="fa-solid fa-graduation-cap"></i> Bu Kelimeyle Pratik Yap
+                    </button>
+                </div>
+            `;
+        }
+
+        // ÖZEL KELİME PRATİĞİ BAŞLATICI
+        function startSpecialWordPractice(wordId) {
+            const word = words.find(w => w.id === wordId);
+            if (!word || !word.sentences || word.sentences.length === 0) {
+                alert("Bu kelimenin pratiğini yapmak için önce ona ait bir cümle eklemelisin.");
+                return;
+            }
+            specialQuizWordId = wordId;
+            quizMode = 'word';
+            
+            switchTab('practice');
+            
+            document.getElementById('practice-title').innerHTML = `
+                <div class="flex flex-col">
+                    <span class="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider"><i class="fa-solid fa-bolt"></i> Özel Kelime Modu Aktif</span>
+                    <span class="text-base font-bold text-slate-900 dark:text-white">"${word.v1}" Alıştırması</span>
+                </div>
+            `;
+            document.getElementById('practice-modes-nav').classList.add('hidden');
+            generateQuestion();
         }
 
         function renderGrammarTable() {
             const tbody = document.getElementById('grammar-table-body');
             const fType = document.getElementById('filter-type').value;
             const fForm = document.getElementById('filter-form').value;
+            if(!tbody) return;
             tbody.innerHTML = '';
 
             let filtered = grammarList.filter(item => {
@@ -672,14 +778,14 @@
 
             filtered.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition text-xs";
+                tr.className = "hover:bg-slate-50 dark:hover:bg-slate-700/50 transition text-xs text-slate-800 dark:text-slate-200";
                 tr.innerHTML = `
-                    <td class="p-3 font-semibold text-indigo-700">${item.category}</td>
+                    <td class="p-3 font-semibold text-indigo-600 dark:text-indigo-400">${item.category}</td>
                     <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.form === 'Olumlu' ? 'bg-emerald-100 text-emerald-800' : item.form === 'Olumsuz' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}">${item.form}</span></td>
-                    <td class="p-3 font-medium text-slate-800">${item.quiz}</td>
-                    <td class="p-3 text-slate-500 text-[11px]">${item.turkish}</td>
+                    <td class="p-3 font-medium">${item.quiz}</td>
+                    <td class="p-3 text-slate-500 dark:text-slate-400 text-[11px]">${item.turkish}</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteGrammar(${item.id})" class="text-rose-500 hover:text-rose-700 transition cursor-pointer p-1"><i class="fa-regular fa-trash-can"></i></button>
+                        <button onclick="deleteGrammar(${item.id})" class="text-rose-500 hover:text-rose-700 cursor-pointer p-1"><i class="fa-regular fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -690,6 +796,7 @@
             words = words.filter(w => w.id !== id);
             localStorage.setItem('vocab_words', JSON.stringify(words));
             renderWords();
+            document.getElementById('detail-panel-content').innerHTML = `Kelimelerim listesinden bir kelimeye tıklayarak tüm detaylarını görebilirsin.`;
             showAlert('Kelime silindi.', 'warning');
         }
 
@@ -703,25 +810,28 @@
         function clearAllWords() {
             if(confirm('Kelimeleri sıfırlamak istiyor musunuz?')) {
                 words = []; localStorage.removeItem('vocab_words'); renderWords();
+                document.getElementById('detail-panel-content').innerHTML = `Kelimelerim listesinden bir kelimeye tıklayarak tüm detaylarını görebilirsin.`;
             }
         }
 
         function resetGrammarToDefault() {
-            if(confirm('Cümle havuzunu fabrika ayarlarına döndürmek ister misiniz?')) {
+            if(confirm('Fabrika ayarlarına dönmek istiyor musunuz?')) {
                 grammarList = [...defaultGrammarList];
                 localStorage.setItem('grammar_list', JSON.stringify(grammarList));
                 renderGrammarTable();
-                showAlert('Havuz ilk 16 cümle kurulumuna sıfırlandı.');
+                showAlert('Havuz sıfırlandı.');
             }
         }
 
         function setQuizMode(mode) {
+            specialQuizWordId = null;
             quizMode = mode;
-            document.getElementById('mode-word').className = mode === 'word' ? 'px-3 py-1.5 rounded-lg text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700 cursor-pointer' : 'px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-600 cursor-pointer';
-            document.getElementById('mode-grammar').className = mode === 'grammar' ? 'px-3 py-1.5 rounded-lg text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700 cursor-pointer' : 'px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-600 cursor-pointer';
+            document.getElementById('mode-word').className = mode === 'word' ? 'px-3 py-1.5 rounded-lg text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700 cursor-pointer' : 'px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-600 dark:text-slate-300 cursor-pointer';
+            document.getElementById('mode-grammar').className = mode === 'grammar' ? 'px-3 py-1.5 rounded-lg text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700 cursor-pointer' : 'px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-600 dark:text-slate-300 cursor-pointer';
             generateQuestion();
         }
 
+        // AKILLI SORU ÜRETİM MOTORU (KOPYALAR ENGELLENDİ)
         function generateQuestion() {
             const quizArea = document.getElementById('quiz-area');
             const emptyArea = document.getElementById('quiz-empty-state');
@@ -730,16 +840,30 @@
             feedback.classList.add('hidden');
 
             if (quizMode === 'word') {
-                const pool = words.filter(w => w.sentences && w.sentences.length > 0);
+                let pool = [];
+                if(specialQuizWordId) {
+                    pool = words.filter(w => w.id === specialQuizWordId && w.sentences && w.sentences.length > 0);
+                } else {
+                    pool = words.filter(w => w.sentences && w.sentences.length > 0);
+                }
+
                 if (pool.length === 0) {
-                    document.getElementById('empty-state-text').innerText = "Kelime modunda çalışmak için en az 1 cümleli kelime eklemiş olmalısın.";
+                    document.getElementById('empty-state-text').innerText = "Alıştırma için kelime cümlesi bulunamadı.";
                     quizArea.classList.add('hidden'); emptyArea.classList.remove('hidden'); return;
                 }
                 quizArea.classList.remove('hidden'); emptyArea.classList.add('hidden');
 
                 const rWord = pool[Math.floor(Math.random() * pool.length)];
                 const rSent = rWord.sentences[Math.floor(Math.random() * rWord.sentences.length)];
-                currentQuestion = { sentence: rSent.text, answer: rSent.answer, hint: `Anlamı: ${rSent.turkish || rWord.meaning}`, badge: `Kelime Cümlesi: ${rSent.category} (${rSent.form})`, speechText: rSent.text.replace("___", rSent.answer) };
+                
+                // fullText alanı saklanır ancak ekrana basılmaz, sadece seslendirme ve kontrol için kullanılır
+                currentQuestion = { 
+                    sentence: rSent.text, 
+                    answer: rSent.answer, 
+                    hint: `Anlamı: ${rSent.turkish || rWord.meaning}`, 
+                    badge: `Kelime Cümlesi: ${rSent.category || 'Genel'} (${rSent.form})`, 
+                    fullText: rSent.text.replace("___", rSent.answer) 
+                };
             } else {
                 if (grammarList.length === 0) {
                     document.getElementById('empty-state-text').innerText = "Cümle havuzunda hiç cümle kalmamış.";
@@ -748,32 +872,37 @@
                 quizArea.classList.remove('hidden'); emptyArea.classList.add('hidden');
 
                 const rGram = grammarList[Math.floor(Math.random() * grammarList.length)];
-                currentQuestion = { sentence: rGram.quiz, answer: rGram.answer, hint: `Anlamı: ${rGram.turkish}`, badge: `${rGram.category} (${rGram.form})`, speechText: rGram.english };
+                currentQuestion = { 
+                    sentence: rGram.quiz, 
+                    answer: rGram.answer, 
+                    hint: `Anlamı: ${rGram.turkish}`, 
+                    badge: `${rGram.category} (${rGram.form})`, 
+                    fullText: rGram.english 
+                };
             }
 
             document.getElementById('quiz-sentence').innerText = currentQuestion.sentence;
             document.getElementById('quiz-hint').innerText = currentQuestion.hint;
             document.getElementById('quiz-type-badge').innerText = currentQuestion.badge;
-            document.getElementById('pronounce-word').innerText = currentQuestion.speechText;
         }
 
         function checkAnswer() {
             if (!currentQuestion) return;
             const input = document.getElementById('quiz-input').value.trim().toLowerCase();
             const feedback = document.getElementById('quiz-feedback');
-            feedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+            feedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800', 'dark:bg-emerald-950/60', 'dark:text-emerald-300', 'dark:bg-rose-950/60', 'dark:text-rose-300');
 
             if (input === currentQuestion.answer) {
-                feedback.innerText = "🎉 Doğru Cevap! Tebrikler.";
-                feedback.classList.add('bg-emerald-100', 'text-emerald-800');
+                feedback.innerText = "🎉 Doğru Cevap! Harikasın.";
+                feedback.classList.add('bg-emerald-100', 'text-emerald-800', 'dark:bg-emerald-950/60', 'dark:text-emerald-300');
                 score += 10;
                 localStorage.setItem('vocab_score', score);
                 document.getElementById('score-counter').innerText = score;
-                speak(currentQuestion.speechText);
-                setTimeout(generateQuestion, 2000);
+                speak(currentQuestion.fullText);
+                setTimeout(generateQuestion, 1800);
             } else {
                 feedback.innerText = `❌ Yanlış Cevap. Doğru Yanıt: "${currentQuestion.answer}"`;
-                feedback.classList.add('bg-rose-100', 'text-rose-800');
+                feedback.classList.add('bg-rose-100', 'text-rose-800', 'dark:bg-rose-950/60', 'dark:text-rose-300');
             }
         }
     </script>
