@@ -1,270 +1,611 @@
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VocabStation</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>WordMind</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-body{
-  background:#0a0a0f;
-  color:white;
-  font-family:Inter,sans-serif;
+
+*{
   margin:0;
-  padding:20px;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --bg:#0f1117;
+  --card:#171923;
+  --card2:#1f2230;
+  --border:rgba(255,255,255,.08);
+
+  --text:#f3f4f6;
+  --muted:#9ca3af;
+
+  --primary:#7c5cff;
+  --primary2:#5b3df5;
+
+  --red:#ef4444;
+  --green:#10b981;
+
+  --radius:18px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,sans-serif;
+  min-height:100vh;
+}
+
+.container{
+  width:min(1100px,92%);
+  margin:auto;
+  padding:30px 0 60px;
+}
+
+header{
+  margin-bottom:30px;
+}
+
+.logo{
+  font-size:34px;
+  font-weight:800;
+  letter-spacing:-1px;
+}
+
+.logo span{
+  color:var(--primary);
+}
+
+.sub{
+  color:var(--muted);
+  margin-top:6px;
+  font-size:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:20px;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
 }
 
 .card{
-  background:#111118;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:20px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:22px;
+}
+
+.card-title{
+  font-size:20px;
+  font-weight:700;
   margin-bottom:20px;
 }
 
-input{
+label{
+  display:block;
+  margin-bottom:7px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.input{
   width:100%;
-  padding:10px;
-  margin-top:6px;
-  margin-bottom:14px;
-  border-radius:8px;
   border:none;
-  background:#18181f;
+  outline:none;
+  background:var(--card2);
   color:white;
-}
-
-button{
-  padding:10px 16px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  background:#8b7cf8;
-  color:white;
-  font-weight:600;
-}
-
-.word-card{
-  background:#18181f;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
   padding:14px;
-  margin-bottom:12px;
+  border-radius:14px;
+  margin-bottom:16px;
+  font-size:15px;
 }
 
-.word-title{
-  font-size:20px;
+.btn{
+  width:100%;
+  border:none;
+  padding:14px;
+  border-radius:14px;
+  cursor:pointer;
   font-weight:700;
+  transition:.2s;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:white;
+}
+
+.btn-primary:hover{
+  background:var(--primary2);
+}
+
+.search{
+  margin-bottom:18px;
+}
+
+.stats{
+  display:flex;
+  gap:14px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+
+.stat{
+  background:var(--card2);
+  border:1px solid var(--border);
+  padding:12px 18px;
+  border-radius:14px;
+}
+
+.stat h3{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+
+.stat p{
+  font-size:22px;
+  font-weight:800;
+}
+
+.words{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:16px;
+}
+
+.word{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  transition:.2s;
+}
+
+.word:hover{
+  transform:translateY(-3px);
+}
+
+.word-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:10px;
+}
+
+.word-name{
+  font-size:22px;
+  font-weight:800;
 }
 
 .word-meaning{
-  color:#8b7cf8;
+  color:var(--primary);
+  font-weight:600;
   margin-top:4px;
 }
 
-.word-sent{
-  margin-top:10px;
-  color:#bdbdd7;
+.example{
+  margin-top:14px;
+  color:#d1d5db;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+}
+
+.small-btn{
+  flex:1;
+  border:none;
+  padding:10px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.delete{
+  background:rgba(239,68,68,.15);
+  color:#f87171;
+}
+
+.listen{
+  background:rgba(124,92,255,.15);
+  color:#a78bfa;
 }
 
 .empty{
-  opacity:.6;
   text-align:center;
-  padding:30px;
+  padding:60px 20px;
+  color:var(--muted);
 }
+
+.practice{
+  margin-top:22px;
+}
+
+.quiz{
+  background:var(--card2);
+  border-radius:18px;
+  padding:24px;
+  border:1px solid var(--border);
+}
+
+.quiz-word{
+  font-size:34px;
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+.quiz-input{
+  margin-top:18px;
+}
+
+.result{
+  margin-top:14px;
+  font-weight:700;
+}
+
+.correct{
+  color:var(--green);
+}
+
+.wrong{
+  color:var(--red);
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="card">
-  <h2>Kelime Ekle</h2>
+<div class="container">
 
-  <form id="word-form">
-    <label>Kelime</label>
-    <input type="text" id="v1" placeholder="run">
+  <header>
+    <div class="logo">Word<span>Mind</span></div>
+    <div class="sub">Modern İngilizce Kelime Öğrenme Uygulaması</div>
+  </header>
 
-    <label>Türkçe</label>
-    <input type="text" id="meaning" placeholder="koşmak">
+  <div class="grid">
 
-    <label>Cümle</label>
-    <input type="text" id="sentence" placeholder="I ___ every day">
+    <!-- LEFT -->
+    <div>
 
-    <label>Cevap</label>
-    <input type="text" id="answer" placeholder="run">
+      <div class="card">
 
-    <button type="submit">Kaydet</button>
-  </form>
-</div>
+        <div class="card-title">Yeni Kelime</div>
 
-<div class="card">
-  <h2>Kelimelerim</h2>
+        <label>İngilizce Kelime</label>
+        <input id="word" class="input" placeholder="run">
 
-  <input
-    type="text"
-    id="search-input"
-    placeholder="Kelime ara..."
-    oninput="renderWords()"
-  >
+        <label>Türkçe Anlam</label>
+        <input id="meaning" class="input" placeholder="koşmak">
 
-  <div id="words-container"></div>
+        <label>Örnek Cümle</label>
+        <input id="example" class="input" placeholder="I run every morning">
 
-  <div id="words-empty" class="empty" style="display:none">
-    Henüz kelime yok
+        <button class="btn btn-primary" onclick="addWord()">
+          Kelime Ekle
+        </button>
+
+      </div>
+
+      <div class="card practice">
+
+        <div class="card-title">Pratik</div>
+
+        <div class="quiz" id="quizArea">
+
+          <div class="quiz-word" id="quizWord">
+            Start
+          </div>
+
+          <p style="color:var(--muted)">
+            Türkçesini yaz
+          </p>
+
+          <input
+            id="quizInput"
+            class="input quiz-input"
+            placeholder="cevap..."
+          >
+
+          <button class="btn btn-primary" onclick="checkAnswer()">
+            Kontrol
+          </button>
+
+          <div class="result" id="result"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+
+      <div class="stats">
+
+        <div class="stat">
+          <h3>Toplam Kelime</h3>
+          <p id="totalWords">0</p>
+        </div>
+
+      </div>
+
+      <input
+        id="search"
+        class="input search"
+        placeholder="Kelime ara..."
+        oninput="renderWords()"
+      >
+
+      <div class="words" id="words"></div>
+
+      <div class="empty" id="empty">
+        Henüz kelime eklenmedi.
+      </div>
+
+    </div>
+
   </div>
+
 </div>
 
 <script>
 
-/* =========================
-   DATA
-========================= */
+let words = JSON.parse(localStorage.getItem("wordmind_words")) || [];
 
-let words = JSON.parse(localStorage.getItem('vocab_words')) || [];
+let currentQuiz = null;
 
 /* =========================
-   SAVE WORD
+   SAVE
 ========================= */
 
-document.getElementById('word-form').addEventListener('submit', function(e){
+function save(){
+  localStorage.setItem(
+    "wordmind_words",
+    JSON.stringify(words)
+  );
+}
 
-  e.preventDefault();
+/* =========================
+   ADD WORD
+========================= */
 
-  const word = {
-    id: Date.now(),
-    v1: document.getElementById('v1').value.trim().toLowerCase(),
-    meaning: document.getElementById('meaning').value.trim(),
-    sentences: [
-      {
-        text: document.getElementById('sentence').value.trim(),
-        answer: document.getElementById('answer').value.trim(),
-        turkish: ''
-      }
-    ]
-  };
+function addWord(){
 
-  words.push(word);
+  const word = document.getElementById("word").value.trim();
+  const meaning = document.getElementById("meaning").value.trim();
+  const example = document.getElementById("example").value.trim();
 
-  localStorage.setItem('vocab_words', JSON.stringify(words));
+  if(!word || !meaning){
+    alert("Kelime ve anlam gerekli");
+    return;
+  }
 
-  this.reset();
+  words.unshift({
+    id:Date.now(),
+    word,
+    meaning,
+    example
+  });
+
+  save();
+
+  document.getElementById("word").value = "";
+  document.getElementById("meaning").value = "";
+  document.getElementById("example").value = "";
 
   renderWords();
 
-});
+  generateQuiz();
+}
 
 /* =========================
-   DELETE WORD
+   RENDER
+========================= */
+
+function renderWords(){
+
+  const container = document.getElementById("words");
+
+  const empty = document.getElementById("empty");
+
+  const q = (
+    document.getElementById("search")?.value || ""
+  ).toLowerCase();
+
+  container.innerHTML = "";
+
+  const filtered = words.filter(w => {
+
+    return (
+      (w.word || "").toLowerCase().includes(q) ||
+      (w.meaning || "").toLowerCase().includes(q) ||
+      (w.example || "").toLowerCase().includes(q)
+    );
+
+  });
+
+  document.getElementById("totalWords").textContent =
+    words.length;
+
+  if(!filtered.length){
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  filtered.forEach(w => {
+
+    const div = document.createElement("div");
+
+    div.className = "word";
+
+    div.innerHTML = `
+
+      <div class="word-top">
+
+        <div>
+          <div class="word-name">${w.word}</div>
+          <div class="word-meaning">${w.meaning}</div>
+        </div>
+
+      </div>
+
+      <div class="example">
+        ${w.example || "Örnek cümle yok"}
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="small-btn listen"
+          onclick="speak('${w.word}')"
+        >
+          Dinle
+        </button>
+
+        <button
+          class="small-btn delete"
+          onclick="deleteWord(${w.id})"
+        >
+          Sil
+        </button>
+
+      </div>
+
+    `;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+/* =========================
+   DELETE
 ========================= */
 
 function deleteWord(id){
 
   words = words.filter(w => w.id !== id);
 
-  localStorage.setItem('vocab_words', JSON.stringify(words));
+  save();
 
   renderWords();
+
+  generateQuiz();
 
 }
 
 /* =========================
-   RENDER WORDS
-   DÜZELTİLMİŞ VERSİYON
+   SPEAK
 ========================= */
 
-function renderWords(){
+function speak(text){
 
-  // GÜVENLİ SEARCH INPUT
-  const searchInput = document.getElementById('search-input');
+  if(!window.speechSynthesis) return;
 
-  const q = (searchInput?.value || '')
+  const utter = new SpeechSynthesisUtterance(text);
+
+  utter.lang = "en-US";
+
+  speechSynthesis.speak(utter);
+
+}
+
+/* =========================
+   QUIZ
+========================= */
+
+function generateQuiz(){
+
+  if(!words.length){
+
+    document.getElementById("quizWord").textContent =
+      "Kelime Yok";
+
+    return;
+  }
+
+  currentQuiz =
+    words[Math.floor(Math.random() * words.length)];
+
+  document.getElementById("quizWord").textContent =
+    currentQuiz.word;
+
+  document.getElementById("quizInput").value = "";
+
+  document.getElementById("result").textContent = "";
+
+}
+
+function checkAnswer(){
+
+  if(!currentQuiz) return;
+
+  const input =
+    document.getElementById("quizInput")
+    .value
     .trim()
     .toLowerCase();
 
-  const c = document.getElementById('words-container');
+  const result = document.getElementById("result");
 
-  const em = document.getElementById('words-empty');
+  if(
+    input === currentQuiz.meaning.toLowerCase()
+  ){
 
-  c.innerHTML = '';
+    result.textContent = "✅ Doğru!";
+    result.className = "result correct";
 
-  let filtered = words;
+    setTimeout(generateQuiz,1200);
 
-  if(q){
+  }else{
 
-    filtered = words.filter(w => {
+    result.textContent =
+      "❌ Doğru cevap: " + currentQuiz.meaning;
 
-      // kelime
-      if((w.v1 || '').includes(q)) return true;
-
-      // anlam
-      if((w.meaning || '').toLowerCase().includes(q)) return true;
-
-      // cümlelerde ara
-      if(
-        (w.sentences || []).some(s =>
-          (s.text || '').toLowerCase().includes(q) ||
-          (s.turkish || '').toLowerCase().includes(q)
-        )
-      ){
-        return true;
-      }
-
-      return false;
-
-    });
+    result.className = "result wrong";
 
   }
-
-  // boş state
-  if(!filtered.length){
-
-    em.style.display = 'block';
-
-    return;
-
-  }
-
-  em.style.display = 'none';
-
-  // kartları bas
-  filtered.forEach(w => {
-
-    const card = document.createElement('div');
-
-    card.className = 'word-card';
-
-    const firstSentence = w.sentences?.[0];
-
-    card.innerHTML = `
-      <div class="word-title">
-        ${w.v1}
-      </div>
-
-      <div class="word-meaning">
-        ${w.meaning}
-      </div>
-
-      <div class="word-sent">
-        ${firstSentence?.text || 'Cümle yok'}
-      </div>
-
-      <div style="margin-top:12px">
-        <button onclick="deleteWord(${w.id})">
-          Sil
-        </button>
-      </div>
-    `;
-
-    c.appendChild(card);
-
-  });
 
 }
+
+/* =========================
+   ENTER
+========================= */
+
+document
+.getElementById("quizInput")
+.addEventListener("keydown",e=>{
+
+  if(e.key==="Enter"){
+    checkAnswer();
+  }
+
+});
 
 /* =========================
    INIT
@@ -272,7 +613,10 @@ function renderWords(){
 
 renderWords();
 
+generateQuiz();
+
 </script>
 
 </body>
 </html>
+```
