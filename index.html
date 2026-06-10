@@ -63,13 +63,13 @@
         <!-- ALERT MESSAGES -->
         <div id="alert-box" class="hidden mb-4 p-4 rounded-xl text-sm text-center font-medium transition-all"></div>
 
-        <!-- TAB 1: KELİME EKLEME FORMU -->
+        <!-- TAB 1: KELİME EKLEME FORMU (DİNAMİK ÇOKLU CÜMLELİ) -->
         <section id="add-word" class="tab-content active bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="border-b border-slate-100 pb-4 mb-6">
                 <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
                     <i class="fa-solid fa-square-plus text-indigo-500"></i> Yeni Kelime ve Türevlerini Ekle
                 </h2>
-                <p class="text-slate-500 text-sm mt-1">Kelimenin zaman çekimlerini, aile hallerini gir ve bu kelimeyle ilgili yapı cümlesi oluştur.</p>
+                <p class="text-slate-500 text-sm mt-1">Kelimenin zaman çekimlerini, aile hallerini gir ve altına dilediğin kadar dinamik örnek cümle satırı ekle.</p>
             </div>
 
             <form id="word-form" onsubmit="saveWord(event)" class="space-y-6">
@@ -124,47 +124,26 @@
                     </div>
                 </div>
 
-                <!-- Kelime İçinden Zaman/Modal Seçmeli Örnek Cümle Ekleme İstasyonu -->
-                <div class="space-y-3 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-indigo-800 uppercase tracking-wider">Kelimeye Bağlı Boşluk Doldurma Cümlesi Ekle</span>
-                        <p class="text-xs text-slate-400">Gizlenecek yapının yerine 3 alt tire (___) koy.</p>
+                <!-- DİNAMİK SIRALI CÜMLE İSTASYONU -->
+                <div class="bg-indigo-50/40 p-4 rounded-xl border border-indigo-100 space-y-4">
+                    <div class="flex justify-between items-center border-b border-indigo-100 pb-2">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-800 uppercase tracking-wider block">Boşluk Doldurma Örnek Cümleleri</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Gizlenecek yapının yerine 3 alt tire (___) koy.</p>
+                        </div>
+                        <button type="button" onclick="addSentenceRow()" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition flex items-center gap-1 cursor-pointer shadow-sm">
+                            <i class="fa-solid fa-plus"></i> Cümle Ekle
+                        </button>
                     </div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-2">
-                        <div>
-                            <label class="block text-[11px] font-semibold text-slate-500 mb-1">Yapı Türü</label>
-                            <select id="w-g-type" onchange="updateWordFormSubCategories()" class="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs">
-                                <option value="modal">Modal (Can, Must...)</option>
-                                <option value="tense">Zaman (Tense - V1, V2...)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold text-slate-500 mb-1">Kategori / Zaman</label>
-                            <select id="w-g-category" class="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"></select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold text-slate-500 mb-1">Cümle Formu</label>
-                            <select id="w-g-form" class="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs">
-                                <option value="Olumlu">Olumlu</option>
-                                <option value="Olumsuz">Olumsuz</option>
-                                <option value="Soru">Soru</option>
-                                <option value="Olumsuz Soru">Olumsuz Soru</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <input type="text" id="w-sentence-text" placeholder="Örn: He ___ (go) to school yesterday." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            <input type="text" id="w-sentence-ans" placeholder="Doğru Cevap: went" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                            <input type="text" id="w-sentence-tur" placeholder="Türkçe Anlamı: Dün okula gitti." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm">
-                        </div>
+                    <!-- Dinamik satırların dolacağı ana konteyner -->
+                    <div id="dynamic-sentences-container" class="space-y-4">
+                        <!-- İlk satır JS ile otomatik basılacak -->
                     </div>
                 </div>
 
                 <button type="submit" class="w-full bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 transition shadow-sm flex items-center justify-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk"></i> Kelimeyi ve Cümleyi Kaydet
+                    <i class="fa-solid fa-floppy-disk"></i> Kelimeyi ve Tüm Cümleleri Kaydet
                 </button>
             </form>
         </section>
@@ -231,7 +210,7 @@
             </form>
         </section>
 
-        <!-- TAB 3: KELİME LİSTESİ (TÜM TÜREV SESLENDİRMELİ KARTLAR) -->
+        <!-- TAB 3: KELİME LİSTESİ -->
         <section id="word-list" class="tab-content bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -247,21 +226,20 @@
             <div id="empty-state" class="hidden text-center py-12 text-slate-400">Henüz kelime eklenmemiş.</div>
         </section>
 
-        <!-- TAB 4: GRAMMAR CÜMLE KÜTÜPHANESİ (YÖNETİM TABLOSU) -->
+        <!-- TAB 4: GRAMMAR CÜMLE KÜTÜPHANESİ -->
         <section id="grammar-list" class="tab-content bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="border-b border-slate-100 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
                         <i class="fa-solid fa-database text-indigo-500"></i> Dil Bilgisi & Cümle Kütüphanesi
                     </h2>
-                    <p class="text-slate-500 text-sm mt-1">Gerek kelime içinden gerek bağımsız eklenen tüm zaman/modal cümlelerini buradan sil veya filtrele.</p>
+                    <p class="text-slate-500 text-sm mt-1">Eklenen tüm zaman/modal cümlelerini buradan filtrele veya yönet.</p>
                 </div>
                 <button onclick="resetGrammarToDefault()" class="text-xs font-semibold px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg hover:bg-amber-100 transition flex items-center gap-1 cursor-pointer">
                     <i class="fa-solid fa-arrow-rotate-left"></i> Fabrika Ayarlarına Dön (16 Soru)
                 </button>
             </div>
 
-            <!-- Filtreleme Barları -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
                 <select id="filter-type" onchange="renderGrammarTable()" class="px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs">
                     <option value="all">Tüm Yapı Türleri</option>
@@ -354,13 +332,11 @@
     </main>
 
     <script>
-        // Tanımlamalar
         const categories = {
             modal: ["can", "could", "may", "might", "must", "should", "would", "have to", "need to", "will"],
             tense: ["Geniş Zaman (V1)", "Şimdiki Zaman (Ving)", "Yakın Geçmiş (Have V3)", "Geçmiş Zaman (V2)", "Sürekli Geçmiş (Was/Were Ving)", "Miş'li Geçmiş (Had V3)"]
         };
 
-        // 16 adet varsayılan başlangıç cümlesi
         const defaultGrammarList = [
             { id: 1, type: "modal", category: "can", form: "Olumlu", english: "I can speak English fluently.", quiz: "I ___ speak English fluently.", answer: "can", turkish: "Akıcı bir şekilde İngilizce konuşabilirim." },
             { id: 2, type: "modal", category: "can", form: "Olumsuz", english: "He cannot lift this heavy box.", quiz: "He ___ lift this heavy box.", answer: "cannot", turkish: "Bu ağır kutuyu kaldıramaz." },
@@ -380,7 +356,6 @@
             { id: 16, type: "tense", category: "Miş'li Geçmiş (Had V3)", form: "Olumlu", english: "The train had left when I arrived.", quiz: "The train ___ left when I arrived.", answer: "had", turkish: "Geldiğimde tren çoktan kalkmıştı." }
         ];
 
-        // Veri Havuzları
         let words = JSON.parse(localStorage.getItem('vocab_words')) || [];
         let grammarList = JSON.parse(localStorage.getItem('grammar_list')) || defaultGrammarList;
         if(!localStorage.getItem('grammar_list')) {
@@ -390,16 +365,18 @@
         let score = parseInt(localStorage.getItem('vocab_score')) || 0;
         let quizMode = 'grammar'; 
         let currentQuestion = null;
+        let sentenceRowCount = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
             updateSubCategories();
-            updateWordFormSubCategories();
+            // Açılışta kelime formuna ilk cümle satırını otomatik ekle
+            addSentenceRow();
             renderWords();
             renderGrammarTable();
             document.getElementById('score-counter').innerText = score;
         });
 
-        // Kategori Yönetimi (Bağımsız Cümle Formu İçin)
+        // BAĞIMSIZ CÜMLE PANELİ KATEGORİ TETİKLEYİCİSİ
         function updateSubCategories() {
             const type = document.getElementById('g-type').value;
             const catSelect = document.getElementById('g-category');
@@ -410,10 +387,13 @@
             });
         }
 
-        // Kategori Yönetimi (Kelime Ekleme İçindeki Yapı Formu İçin)
-        function updateWordFormSubCategories() {
-            const type = document.getElementById('w-g-type').value;
-            const catSelect = document.getElementById('w-g-category');
+        // DİNAMİK SATIRLAR İÇİN ALT KATEGORİ TETİKLEYİCİSİ
+        function updateRowSubCategories(rowId) {
+            const typeSelect = document.getElementById(`w-g-type-${rowId}`);
+            const catSelect = document.getElementById(`w-g-category-${rowId}`);
+            if(!typeSelect || !catSelect) return;
+            
+            const type = typeSelect.value;
             catSelect.innerHTML = '';
             categories[type].forEach(cat => {
                 const opt = document.createElement('option');
@@ -421,7 +401,65 @@
             });
         }
 
-        // Sekme Değiştirme
+        // YENİ CÜMLE SATIRI EKLEME (ÇÖP KUTUSUYLA BERABER)
+        function addSentenceRow() {
+            sentenceRowCount++;
+            const container = document.getElementById('dynamic-sentences-container');
+            
+            const rowDiv = document.createElement('div');
+            rowDiv.id = `sentence-row-${sentenceRowCount}`;
+            rowDiv.className = "p-3 bg-white border border-slate-200 rounded-xl space-y-2 relative shadow-sm transition-all";
+            
+            rowDiv.innerHTML = `
+                <!-- Çöp Kutusu Butonu -->
+                <button type="button" onclick="removeSentenceRow(${sentenceRowCount})" class="absolute top-2 right-2 text-rose-500 hover:text-rose-700 p-1 text-sm cursor-pointer transition-colors" title="Bu Cümleyi Kaldır">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pr-6">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Yapı Türü</label>
+                        <select id="w-g-type-${sentenceRowCount}" onchange="updateRowSubCategories(${sentenceRowCount})" class="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium">
+                            <option value="modal">Modal</option>
+                            <option value="tense">Zaman (Tense)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Kategori / Zaman</label>
+                        <select id="w-g-category-${sentenceRowCount}" class="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">Cümle Formu</label>
+                        <select id="w-g-form-${sentenceRowCount}" class="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium">
+                            <option value="Olumlu">Olumlu</option>
+                            <option value="Olumsuz">Olumsuz</option>
+                            <option value="Soru">Soru</option>
+                            <option value="Olumsuz Soru">Olumsuz Soru</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5 pt-1">
+                    <input type="text" id="w-sentence-text-${sentenceRowCount}" placeholder="Cümle Görünümü. Örn: He ___ (go) to school yesterday." class="w-full px-3 py-1.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <input type="text" id="w-sentence-ans-${sentenceRowCount}" placeholder="Doğru Cevap: went" class="w-full px-3 py-1.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs">
+                        <input type="text" id="w-sentence-tur-${sentenceRowCount}" placeholder="Türkçe Anlamı: Dün okula gitti." class="w-full px-3 py-1.5 bg-slate-50/50 border border-slate-200 rounded-lg text-xs">
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(rowDiv);
+            updateRowSubCategories(sentenceRowCount);
+        }
+
+        // SATIRI ÇÖP KUTUSUYLA SİLME
+        function removeSentenceRow(rowId) {
+            const row = document.getElementById(`sentence-row-${rowId}`);
+            if(row) {
+                row.remove();
+            }
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => {
@@ -461,7 +499,7 @@
             if (currentQuestion && currentQuestion.speechText) speak(currentQuestion.speechText);
         }
 
-        // KELİME VE BAĞLI CÜMLEYİ KAYDETME
+        // TOPLU KELİME VE ÇOKLU CÜMLE KAYIT MOTORU
         function saveWord(e) {
             e.preventDefault();
             const v1Val = document.getElementById('v1').value.trim().toLowerCase();
@@ -481,37 +519,52 @@
                 sentences: []
             };
 
-            // Kelime alanında yazılan zaman/modal cümlesini yakala ve hem kelimeye hem global kütüphaneye ekle
-            const sText = document.getElementById('w-sentence-text').value.trim();
-            const sAns = document.getElementById('w-sentence-ans').value.trim().toLowerCase();
-            const sTur = document.getElementById('w-sentence-tur').value.trim();
-            const sType = document.getElementById('w-g-type').value;
-            const sCat = document.getElementById('w-g-category').value;
-            const sForm = document.getElementById('w-g-form').value;
+            // Form içindeki mevcut tüm dinamik satır elementlerini bulup tara
+            const container = document.getElementById('dynamic-sentences-container');
+            const rows = container.children;
+            let addedSentencesCount = 0;
 
-            if (sText && sAns) {
-                const sentenceObj = { text: sText, answer: sAns, turkish: sTur, type: sType, category: sCat, form: sForm };
-                newWord.sentences.push(sentenceObj);
+            for (let i = 0; i < rows.length; i++) {
+                const idAttr = rows[i].id; 
+                const numIndex = idAttr.replace('sentence-row-', ''); // Satır numarası indexini yakala
 
-                // Global Dil Bilgisi Havuzuna da gönder (Böylece kütüphaneden silinebilir/filtrelenebilir olur)
-                grammarList.push({
-                    id: Date.now() + 1, // çakışmayı önlemek için
-                    type: sType,
-                    category: sCat,
-                    form: sForm,
-                    english: sText.replace("___", sAns), // tam halini simüle et
-                    quiz: sText,
-                    answer: sAns,
-                    turkish: sTur || `${v1Val} kelimesi alıştırması.`
-                });
-                localStorage.setItem('grammar_list', JSON.stringify(grammarList));
+                const sText = document.getElementById(`w-sentence-text-${numIndex}`).value.trim();
+                const sAns = document.getElementById(`w-sentence-ans-${numIndex}`).value.trim().toLowerCase();
+                const sTur = document.getElementById(`w-sentence-tur-${numIndex}`).value.trim();
+                const sType = document.getElementById(`w-g-type-${numIndex}`).value;
+                const sCat = document.getElementById(`w-g-category-${numIndex}`).value;
+                const sForm = document.getElementById(`w-g-form-${numIndex}`).value;
+
+                if (sText && sAns) {
+                    addedSentencesCount++;
+                    const sentenceObj = { text: sText, answer: sAns, turkish: sTur, type: sType, category: sCat, form: sForm };
+                    newWord.sentences.push(sentenceObj);
+
+                    // Global Dil Bilgisi Havuzuna da aktar
+                    grammarList.push({
+                        id: Date.now() + Math.random(),
+                        type: sType,
+                        category: sCat,
+                        form: sForm,
+                        english: sText.replace("___", sAns),
+                        quiz: sText,
+                        answer: sAns,
+                        turkish: sTur || `${v1Val} kelimesi alıştırması.`
+                    });
+                }
             }
 
             words.push(newWord);
             localStorage.setItem('vocab_words', JSON.stringify(words));
-            showAlert(`"${newWord.v1}" kelimesi ve ilgili yapısı başarıyla kaydedildi.`);
+            localStorage.setItem('grammar_list', JSON.stringify(grammarList));
+
+            showAlert(`"${newWord.v1}" kelimesi ve yazdığın ${addedSentencesCount} adet cümle tek seferde kaydedildi.`);
+            
+            // Formu temizle ve tek bir boş cümle satırı açarak düzeni koru
             document.getElementById('word-form').reset();
-            updateWordFormSubCategories();
+            container.innerHTML = '';
+            sentenceRowCount = 0;
+            addSentenceRow();
         }
 
         // BAĞIMSIZ DİL BİLGİSİ CÜMLESİ KAYDETME
@@ -535,7 +588,6 @@
             updateSubCategories();
         }
 
-        // KELİMELERİ VE HER BİR TÜREVİNİ AYRI AYRI SESLENDİRMELİ RENDER ET
         function renderWords() {
             const container = document.getElementById('words-container');
             const empty = document.getElementById('empty-state');
@@ -547,7 +599,6 @@
                 const card = document.createElement('div');
                 card.className = 'card bg-white border border-slate-200 rounded-2xl h-60 cursor-pointer relative';
                 
-                // Güvenli hoparlör butonu oluşturucu metodu (içi boş alanlar için buton gizlenir veya pasif olur)
                 const getAudioBtn = (text) => {
                     if(!text || text === '-') return '';
                     return `<button onclick="event.stopPropagation(); speak('${text}')" class="ml-1 text-indigo-500 hover:text-indigo-700 pointer-events-auto"><i class="fa-solid fa-volume-high text-[11px]"></i></button>`;
@@ -555,7 +606,6 @@
 
                 card.innerHTML = `
                     <div class="card-inner relative w-full h-full duration-500 pointer-events-none">
-                        <!-- Ön Yüz -->
                         <div class="card-front absolute w-full h-full p-4 bg-white rounded-2xl flex flex-col justify-between shadow-sm">
                             <div>
                                 <div class="flex justify-between items-center border-b border-slate-100 pb-1">
@@ -565,7 +615,6 @@
                                     <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded-full text-slate-500 font-mono">V1 Halleri</span>
                                 </div>
                                 
-                                <!-- Fiil Zaman Çekimleri Seslendirmeli -->
                                 <div class="grid grid-cols-2 gap-x-2 gap-y-1 mt-3 text-xs font-mono text-slate-600 bg-slate-50 p-2 rounded-xl border border-slate-100">
                                     <div class="flex items-center justify-between"><span>V2: <b class="text-slate-800 font-sans">${w.v2||'-'}</b></span>${getAudioBtn(w.v2)}</div>
                                     <div class="flex items-center justify-between"><span>V3: <b class="text-slate-800 font-sans">${w.v3||'-'}</b></span>${getAudioBtn(w.v3)}</div>
@@ -573,7 +622,6 @@
                                     <div class="flex items-center justify-between"><span>-ing: <b class="text-slate-800 font-sans">${w.ing_form||'-'}</b></span>${getAudioBtn(w.ing_form)}</div>
                                 </div>
 
-                                <!-- Kelime Ailesi Türevleri Seslendirmeli -->
                                 <div class="grid grid-cols-3 gap-1 mt-3 border-t border-slate-100 pt-2 text-[10px] text-slate-500">
                                     <div class="bg-indigo-50/40 p-1 rounded flex flex-col justify-between">
                                         <span><b>Noun:</b> <span class="text-slate-700 block truncate">${w.noun||'-'}</span></span>
@@ -591,16 +639,15 @@
                             </div>
 
                             <div class="flex justify-between items-center text-xs text-slate-400 mt-2">
-                                <span class="font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md text-[10px]">${w.sentences.length > 0 ? '1 Yapı Cümlesi İçeriyor' : 'Bağlı Cümle Yok'}</span>
+                                <span class="font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md text-[10px]">${w.sentences.length} Örnek Cümle</span>
                                 <button onclick="event.stopPropagation(); deleteWord(${w.id})" class="text-rose-500 hover:text-rose-700 pointer-events-auto p-1"><i class="fa-regular fa-trash-can"></i></button>
                             </div>
                         </div>
                         
-                        <!-- Arka Yüz (Anlam Alanı) -->
                         <div class="card-back absolute w-full h-full p-4 bg-indigo-600 rounded-2xl flex flex-col justify-center items-center text-white text-center shadow-md">
                             <i class="fa-solid fa-language text-2xl mb-2 opacity-50"></i>
                             <p class="font-bold text-base px-2 leading-snug">${w.meaning}</p>
-                            <span class="text-[10px] mt-4 text-indigo-200 uppercase tracking-widest font-semibold">Kartı Çevirmek İçin Tıkla</span>
+                            <span class="text-[10px] mt-4 text-indigo-200 uppercase tracking-widest font-semibold">Çevirmek İçin Tıkla</span>
                         </div>
                     </div>
                 `;
@@ -609,7 +656,6 @@
             });
         }
 
-        // DİL BİLGİSİ TABLOSUNU RENDER ET
         function renderGrammarTable() {
             const tbody = document.getElementById('grammar-table-body');
             const fType = document.getElementById('filter-type').value;
@@ -661,7 +707,7 @@
         }
 
         function resetGrammarToDefault() {
-            if(confirm('Cümle havuzunu fabrika ayarlarına döndürüp ilk 16 temel cümleyi yüklemek ister misiniz?')) {
+            if(confirm('Cümle havuzunu fabrika ayarlarına döndürmek ister misiniz?')) {
                 grammarList = [...defaultGrammarList];
                 localStorage.setItem('grammar_list', JSON.stringify(grammarList));
                 renderGrammarTable();
@@ -669,7 +715,6 @@
             }
         }
 
-        // PRATİK MODU AYARI
         function setQuizMode(mode) {
             quizMode = mode;
             document.getElementById('mode-word').className = mode === 'word' ? 'px-3 py-1.5 rounded-lg text-xs font-bold border border-indigo-200 bg-indigo-50 text-indigo-700 cursor-pointer' : 'px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white text-slate-600 cursor-pointer';
@@ -677,7 +722,6 @@
             generateQuestion();
         }
 
-        // AKILLI SORU MOTORU
         function generateQuestion() {
             const quizArea = document.getElementById('quiz-area');
             const emptyArea = document.getElementById('quiz-empty-state');
@@ -688,7 +732,7 @@
             if (quizMode === 'word') {
                 const pool = words.filter(w => w.sentences && w.sentences.length > 0);
                 if (pool.length === 0) {
-                    document.getElementById('empty-state-text').innerText = "Kelime modunda çalışmak için en az 1 zaman/modal cümleli kelime eklemiş olmalısın.";
+                    document.getElementById('empty-state-text').innerText = "Kelime modunda çalışmak için en az 1 cümleli kelime eklemiş olmalısın.";
                     quizArea.classList.add('hidden'); emptyArea.classList.remove('hidden'); return;
                 }
                 quizArea.classList.remove('hidden'); emptyArea.classList.add('hidden');
@@ -698,7 +742,7 @@
                 currentQuestion = { sentence: rSent.text, answer: rSent.answer, hint: `Anlamı: ${rSent.turkish || rWord.meaning}`, badge: `Kelime Cümlesi: ${rSent.category} (${rSent.form})`, speechText: rSent.text.replace("___", rSent.answer) };
             } else {
                 if (grammarList.length === 0) {
-                    document.getElementById('empty-state-text').innerText = "Cümle havuzunda hiç cümle kalmamış. Dil Bilgisi veya Kelime ekle sekmesinden yeni yapılar ekleyebilirsin.";
+                    document.getElementById('empty-state-text').innerText = "Cümle havuzunda hiç cümle kalmamış.";
                     quizArea.classList.add('hidden'); emptyArea.classList.remove('hidden'); return;
                 }
                 quizArea.classList.remove('hidden'); emptyArea.classList.add('hidden');
@@ -713,7 +757,6 @@
             document.getElementById('pronounce-word').innerText = currentQuestion.speechText;
         }
 
-        // CEVAP KONTROLÜ
         function checkAnswer() {
             if (!currentQuestion) return;
             const input = document.getElementById('quiz-input').value.trim().toLowerCase();
