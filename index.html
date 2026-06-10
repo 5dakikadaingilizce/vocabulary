@@ -1,878 +1,278 @@
-html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VocabStation</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0a0a0f;
-  --surface:#111118;
-  --surface2:#18181f;
-  --surface3:#22222c;
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --text:#eeeef5;
-  --text2:#8888a8;
-  --text3:#44445a;
-  --accent:#8b7cf8;
-  --accent2:#7060e0;
-  --accent-glow:rgba(139,124,248,0.12);
-  --accent-border:rgba(139,124,248,0.25);
-  --green:#34d399;
-  --green-bg:rgba(52,211,153,0.08);
-  --green-border:rgba(52,211,153,0.2);
-  --red:#f87171;
-  --red-bg:rgba(248,113,113,0.08);
-  --red-border:rgba(248,113,113,0.2);
-  --amber:#fbbf24;
-  --amber-bg:rgba(251,191,36,0.08);
-  --blue:#60a5fa;
-  --blue-bg:rgba(96,165,250,0.08);
-  --r:10px;--r-sm:7px;--r-lg:14px;
+body{
+  background:#0a0a0f;
+  color:white;
+  font-family:Inter,sans-serif;
+  margin:0;
+  padding:20px;
 }
-.light{
-  --bg:#f3f4f8;
-  --surface:#ffffff;
-  --surface2:#f0f1f6;
-  --surface3:#e8e9f0;
-  --border:rgba(0,0,0,0.07);
-  --border2:rgba(0,0,0,0.12);
-  --text:#18182a;
-  --text2:#6060808;
-  --text3:#9090b0;
-  --accent:#5b4cf0;
-  --accent2:#4438d0;
-  --accent-glow:rgba(91,76,240,0.08);
-  --accent-border:rgba(91,76,240,0.2);
-  --green:#059669;
-  --green-bg:rgba(5,150,105,0.07);
-  --green-border:rgba(5,150,105,0.18);
-  --red:#dc2626;
-  --red-bg:rgba(220,38,38,0.07);
-  --red-border:rgba(220,38,38,0.18);
-  --amber:#d97706;
-  --amber-bg:rgba(217,119,6,0.07);
-  --blue:#2563eb;
-  --blue-bg:rgba(37,99,235,0.07);
+
+.card{
+  background:#111118;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:20px;
 }
-html{font-family:'Inter',sans-serif;font-size:14px;line-height:1.6}
-body{background:var(--bg);color:var(--text);min-height:100vh;transition:background .25s,color .25s}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* ── HEADER ── */
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:0;z-index:200}
-.header-inner{max-width:1080px;margin:0 auto;height:58px;display:flex;align-items:center;gap:16px}
-.logo{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px;white-space:nowrap}
-.logo-dot{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff}
-.logo-text{color:var(--text)}
-.logo-sub{font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-glow);border:1px solid var(--accent-border);padding:2px 7px;border-radius:99px}
-nav{flex:1;display:flex;align-items:center;justify-content:center;gap:2px}
-.nav-btn{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:var(--r-sm);font-size:13px;font-weight:500;cursor:pointer;background:transparent;border:none;color:var(--text2);transition:all .15s}
-.nav-btn:hover{background:var(--surface2);color:var(--text)}
-.nav-btn.active{background:var(--accent-glow);color:var(--accent)}
-.nav-btn i{font-size:13px}
-.header-right{display:flex;align-items:center;gap:8px}
-.icon-round-btn{width:34px;height:34px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:13px;transition:all .15s}
-.icon-round-btn:hover{background:var(--surface3);color:var(--text)}
-.score-pill{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--amber);background:var(--amber-bg);border:1px solid rgba(251,191,36,0.18);padding:4px 10px;border-radius:99px;white-space:nowrap}
+input{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  margin-bottom:14px;
+  border-radius:8px;
+  border:none;
+  background:#18181f;
+  color:white;
+}
 
-/* ── LAYOUT ── */
-main{max-width:1080px;margin:0 auto;padding:24px 24px;min-height:calc(100vh - 58px)}
-.tab-content{display:none}
-.tab-content.active{display:block}
+button{
+  padding:10px 16px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:#8b7cf8;
+  color:white;
+  font-weight:600;
+}
 
-/* ── ALERT ── */
-#alert-box{position:fixed;top:70px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:500;display:none;z-index:999;animation:fadeDown .2s ease;white-space:nowrap}
-@keyframes fadeDown{from{opacity:0;transform:translateX(-50%) translateY(-8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-#alert-box.success{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-#alert-box.warning{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(251,191,36,0.2)}
-#alert-box.error{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.word-card{
+  background:#18181f;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+}
 
-/* ── CARDS / PANELS ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.card-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
-.card-title i{color:var(--accent);font-size:14px}
+.word-title{
+  font-size:20px;
+  font-weight:700;
+}
 
-/* ── FORMS ── */
-label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:5px}
-input[type=text],select,textarea{width:100%;padding:9px 11px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
-input[type=text]:focus,select:focus{border-color:var(--accent)}
-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238888a8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
-select option{background:var(--surface2)}
-.frow{margin-bottom:14px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
-@media(max-width:640px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr 1fr}}
+.word-meaning{
+  color:#8b7cf8;
+  margin-top:4px;
+}
 
-.fieldset{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px}
-.fieldset-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.word-sent{
+  margin-top:10px;
+  color:#bdbdd7;
+}
 
-/* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;white-space:nowrap}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:var(--accent2)}
-.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
-.btn-ghost:hover{background:var(--surface3)}
-.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-.btn-danger:hover{background:rgba(248,113,113,0.13)}
-.btn-success{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.btn-success:hover{background:rgba(52,211,153,0.13)}
-.btn-sm{padding:5px 10px;font-size:12px}
-.btn-full{width:100%}
-.iBtn{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;background:transparent;border:none;transition:all .15s;flex-shrink:0}
-.iBtn.edit{color:var(--blue)}
-.iBtn.edit:hover{background:var(--blue-bg)}
-.iBtn.del{color:var(--red)}
-.iBtn.del:hover{background:var(--red-bg)}
-.iBtn.spk{color:var(--accent)}
-.iBtn.spk:hover{background:var(--accent-glow)}
-
-/* ── SEARCH BAR ── */
-.search-wrap{position:relative;margin-bottom:18px}
-.search-wrap i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px}
-.search-wrap input{padding-left:32px}
-
-/* ── WORD GRID ── */
-#words-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.word-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:15px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:9px}
-.word-card:hover{border-color:var(--accent-border);background:var(--surface3)}
-.wc-head{display:flex;align-items:center;justify-content:space-between}
-.wc-title{font-size:15px;font-weight:700;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;gap:5px}
-.wc-badge{font-size:11px;background:var(--accent-glow);color:var(--accent);padding:2px 7px;border-radius:99px;font-weight:600}
-.wc-forms{font-size:11px;color:var(--text3);font-family:monospace;border-top:1px solid var(--border);padding-top:8px}
-.wc-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:8px}
-.wc-sent{font-size:11px;color:var(--text3)}
-.wc-actions{display:flex;gap:3px}
-
-/* ── SENTENCE ROW ── */
-.sent-row{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:13px;position:relative;margin-bottom:9px}
-.sent-row-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-@media(max-width:600px){.sent-row-grid{grid-template-columns:1fr 1fr}}
-
-/* ── AUTO SENTENCES ── */
-.auto-sent-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px}
-.auto-sent-head{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.auto-sent-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
-.auto-sent-list{max-height:260px;overflow-y:auto}
-.auto-sent-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);gap:10px;cursor:pointer;transition:background .1s}
-.auto-sent-item:last-child{border-bottom:none}
-.auto-sent-item:hover{background:var(--surface3)}
-.asi-text{flex:1}
-.asi-en{font-size:12px;color:var(--text);line-height:1.4}
-.asi-tr{font-size:11px;color:var(--text3);margin-top:1px}
-.asi-cat{font-size:10px;font-weight:700;color:var(--accent);background:var(--accent-glow);padding:2px 6px;border-radius:99px;white-space:nowrap}
-.asi-add{width:24px;height:24px;border-radius:6px;background:var(--accent-glow);color:var(--accent);border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.asi-add:hover{background:var(--accent);color:#fff}
-.asi-add.added{background:var(--green-bg);color:var(--green)}
-
-/* ── PRACTICE ── */
-.mode-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
-.mode-tab{padding:6px 15px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;background:var(--surface2);border:1px solid var(--border);color:var(--text2);transition:all .15s}
-.mode-tab.active{background:var(--accent-glow);color:var(--accent);border-color:var(--accent-border)}
-.quiz-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px;margin-bottom:16px}
-.quiz-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:var(--accent-glow);color:var(--accent);padding:3px 10px;border-radius:99px;margin-bottom:16px}
-.quiz-sent{font-size:21px;font-weight:700;font-family:'Space Grotesk',sans-serif;text-align:center;margin:20px 0;line-height:1.5;color:var(--text)}
-.quiz-hint{font-size:12px;color:var(--text3);text-align:center;margin-bottom:20px}
-.quiz-input-row{display:flex;gap:8px;max-width:440px;margin:0 auto}
-.quiz-fb{display:none;text-align:center;font-size:13px;font-weight:600;padding:10px 16px;border-radius:var(--r-sm);margin-top:14px}
-.quiz-fb.correct{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.quiz-fb.wrong{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-
-/* flashcard */
-.flashcard{perspective:800px;height:200px;margin-bottom:16px;cursor:pointer}
-.fc-inner{width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;position:relative}
-.fc-inner.flipped{transform:rotateY(180deg)}
-.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center}
-.fc-back{transform:rotateY(180deg)}
-.fc-word{font-size:28px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--text)}
-.fc-meaning{font-size:16px;color:var(--accent);font-weight:600}
-.fc-hint{font-size:12px;color:var(--text3)}
-.fc-details{font-size:12px;color:var(--text2);line-height:1.8}
-.fc-actions{display:flex;gap:8px;justify-content:center}
-
-/* ── EMPTY STATE ── */
-.empty{text-align:center;padding:56px 20px;color:var(--text3)}
-.empty i{font-size:30px;color:var(--border2);margin-bottom:12px;display:block}
-.empty p{font-size:13px}
-
-/* ── DETAIL OVERLAY ── */
-#detail-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;padding:16px}
-#detail-overlay.open{display:flex}
-.detail-modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
-.dm-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.dm-body{padding:20px}
-.dm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.dm-kv{background:var(--surface2);border-radius:var(--r-sm);padding:8px 11px}
-.dm-label{font-size:10px;color:var(--text3);margin-bottom:1px}
-.dm-val{font-size:13px;font-weight:600;color:var(--text)}
-.dm-sent{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;margin-bottom:6px}
-.dm-sent p{font-size:12px;color:var(--text);line-height:1.5}
-.dm-sent small{font-size:11px;color:var(--text3);margin-top:3px;display:block}
-.sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px;margin-top:14px}
-
-/* ── RESPONSIVE ── */
-@media(max-width:700px){
-  .header-inner{flex-wrap:wrap;height:auto;padding:10px 0;gap:8px}
-  nav{width:100%;overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start;padding-bottom:2px}
-  .nav-btn{padding:5px 10px;font-size:12px}
-  .nav-btn span{display:none}
-  .quiz-sent{font-size:16px}
-  .card{padding:16px}
-  main{padding:12px}
+.empty{
+  opacity:.6;
+  text-align:center;
+  padding:30px;
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="logo">
-      <div class="logo-dot"><i class="fa-solid fa-graduation-cap"></i></div>
-      <span class="logo-text">VocabStation</span>
-      <span class="logo-sub">v2</span>
-    </div>
-    <nav>
-      <button onclick="switchTab('add-word')" id="btn-add-word" class="nav-btn active">
-        <i class="fa-solid fa-plus"></i><span>Kelime Ekle</span>
-      </button>
-      <button onclick="switchTab('word-list')" id="btn-word-list" class="nav-btn">
-        <i class="fa-solid fa-list"></i><span>Kelimelerim</span>
-      </button>
-      <button onclick="switchTab('practice')" id="btn-practice" class="nav-btn">
-        <i class="fa-solid fa-dumbbell"></i><span>Pratik</span>
-      </button>
-    </nav>
-    <div class="header-right">
-      <div class="score-pill"><i class="fa-solid fa-star"></i><span id="score-counter">0</span></div>
-      <button onclick="toggleTheme()" class="icon-round-btn" title="Tema">
-        <i id="theme-icon" class="fa-solid fa-moon"></i>
-      </button>
-    </div>
-  </div>
-</header>
+<div class="card">
+  <h2>Kelime Ekle</h2>
 
-<div id="alert-box"></div>
+  <form id="word-form">
+    <label>Kelime</label>
+    <input type="text" id="v1" placeholder="run">
 
-<!-- DETAIL OVERLAY -->
-<div id="detail-overlay" onclick="closeDetail(event)">
-  <div class="detail-modal" id="detail-modal"></div>
+    <label>Türkçe</label>
+    <input type="text" id="meaning" placeholder="koşmak">
+
+    <label>Cümle</label>
+    <input type="text" id="sentence" placeholder="I ___ every day">
+
+    <label>Cevap</label>
+    <input type="text" id="answer" placeholder="run">
+
+    <button type="submit">Kaydet</button>
+  </form>
 </div>
 
-<main>
+<div class="card">
+  <h2>Kelimelerim</h2>
 
-  <!-- TAB 1: KELİME EKLE -->
-  <section id="add-word" class="tab-content active">
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title" id="form-title"><i class="fa-solid fa-square-plus"></i> Yeni Kelime</h2>
-        <button type="button" id="cancel-edit-btn" onclick="resetForm()" class="btn btn-ghost btn-sm" style="display:none">
-          <i class="fa-solid fa-xmark"></i> İptal
-        </button>
-      </div>
+  <input
+    type="text"
+    id="search-input"
+    placeholder="Kelime ara..."
+    oninput="renderWords()"
+  >
 
-      <form id="word-form" onsubmit="saveWord(event)">
-        <input type="hidden" id="editing-id" value="">
+  <div id="words-container"></div>
 
-        <div class="grid-2">
-          <div><label>Kelime (V1) *</label><input type="text" id="v1" required placeholder="Örn: run" oninput="updateAutoSentences()"></div>
-          <div><label>Türkçe Anlam *</label><input type="text" id="meaning" required placeholder="Örn: koşmak"></div>
-        </div>
-
-        <div class="fieldset">
-          <div class="fieldset-title"><i class="fa-solid fa-clock-rotate-left"></i> Fiil Çekimleri</div>
-          <div class="grid-4">
-            <div><label>Past (V2)</label><input type="text" id="v2" placeholder="ran" oninput="updateAutoSentences()"></div>
-            <div><label>Past Part. (V3)</label><input type="text" id="v3" placeholder="run" oninput="updateAutoSentences()"></div>
-            <div><label>-s Form</label><input type="text" id="s_form" placeholder="runs" oninput="updateAutoSentences()"></div>
-            <div><label>-ing Form</label><input type="text" id="ing_form" placeholder="running" oninput="updateAutoSentences()"></div>
-          </div>
-        </div>
-
-        <div class="fieldset">
-          <div class="fieldset-title"><i class="fa-solid fa-sitemap"></i> Kelime Ailesi</div>
-          <div class="grid-3">
-            <div><label>İsim (Noun)</label><input type="text" id="noun" placeholder="runner"></div>
-            <div><label>Sıfat (Adj)</label><input type="text" id="adjective" placeholder="running"></div>
-            <div><label>Zarf (Adv)</label><input type="text" id="adverb" placeholder="-"></div>
-          </div>
-        </div>
-
-        <!-- AUTO SENTENCES -->
-        <div class="auto-sent-box">
-          <div class="auto-sent-head">
-            <span class="auto-sent-label"><i class="fa-solid fa-bolt"></i> Hazır Cümle Şablonları</span>
-            <button type="button" onclick="addAllAutoSents()" class="btn btn-ghost btn-sm">
-              <i class="fa-solid fa-check-double"></i> Tümünü Ekle
-            </button>
-          </div>
-          <div class="auto-sent-list" id="auto-sent-list">
-            <div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">
-              <i class="fa-solid fa-keyboard" style="display:block;font-size:20px;margin-bottom:6px;color:var(--border2)"></i>
-              Kelime ve V2 girince şablonlar belirir
-            </div>
-          </div>
-        </div>
-
-        <!-- MANUAL SENTENCES -->
-        <div class="fieldset">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div>
-              <div class="fieldset-title" style="margin-bottom:2px"><i class="fa-solid fa-align-left"></i> Eklenecek Cümleler</div>
-              <div style="font-size:11px;color:var(--text3)">Boşluk için <strong style="color:var(--text2)">___</strong> kullan</div>
-            </div>
-            <button type="button" onclick="addSentRow()" class="btn btn-ghost btn-sm">
-              <i class="fa-solid fa-plus"></i> Manuel Ekle
-            </button>
-          </div>
-          <div id="sent-container"></div>
-          <div id="sent-empty" style="text-align:center;padding:16px;color:var(--text3);font-size:12px">
-            Yukarıdan şablon seç ya da Manuel Ekle'ye bas
-          </div>
-        </div>
-
-        <button type="submit" id="form-submit" class="btn btn-primary btn-full">
-          <i class="fa-solid fa-floppy-disk"></i> Kaydet
-        </button>
-      </form>
-    </div>
-  </section>
-
-  <!-- TAB 2: KELİMELERİM -->
-  <section id="word-list" class="tab-content">
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title"><i class="fa-solid fa-book-bookmark"></i> Kelime Dağarcığım</h2>
-        <button onclick="clearAll()" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i> Sıfırla</button>
-      </div>
-
-      <div class="search-wrap">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="search-input" placeholder="Kelime, anlam veya cümle ara..." oninput="renderWords()">
-      </div>
-
-      <div id="words-container"></div>
-      <div id="words-empty" class="empty" style="display:none">
-        <i class="fa-solid fa-box-open"></i><p>Henüz kelime eklenmemiş.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- TAB 3: PRATİK -->
-  <section id="practice" class="tab-content">
-    <div class="card">
-      <div class="card-header">
-        <h2 class="card-title"><i class="fa-solid fa-circle-play"></i> Alıştırma</h2>
-        <div class="score-pill" style="font-size:12px"><i class="fa-solid fa-star"></i> <span id="score-counter2">0</span> puan</div>
-      </div>
-
-      <div class="mode-tabs">
-        <button onclick="setPMode('fill')" id="pm-fill" class="mode-tab active">Boşluk Doldur</button>
-        <button onclick="setPMode('flash')" id="pm-flash" class="mode-tab">Flash Kart</button>
-        <button onclick="setPMode('tr2en')" id="pm-tr2en" class="mode-tab">TR → EN Yaz</button>
-      </div>
-
-      <div id="practice-area"></div>
-      <div id="practice-empty" class="empty" style="display:none">
-        <i class="fa-solid fa-circle-exclamation" style="color:var(--amber)"></i>
-        <p>Pratik için cümle eklenmiş kelime lazım. Kelime ekle sekmesinden başla.</p>
-      </div>
-    </div>
-  </section>
-
-</main>
+  <div id="words-empty" class="empty" style="display:none">
+    Henüz kelime yok
+  </div>
+</div>
 
 <script>
-/* ─────────────── DATA ─────────────── */
+
+/* =========================
+   DATA
+========================= */
+
 let words = JSON.parse(localStorage.getItem('vocab_words')) || [];
-let score = parseInt(localStorage.getItem('vocab_score')) || 0;
-let practiceMode = 'fill';
-let currentQ = null;
-let sentRowCount = 0;
-let fcFlipped = false;
-let fcIndex = -1;
-let autoSentQueue = [];
 
-(function init(){
-  if(localStorage.getItem('theme')==='light'){
-    document.body.classList.add('light');
-    document.getElementById('theme-icon').className='fa-solid fa-sun';
-  }
-  document.getElementById('score-counter').textContent = score;
-  document.getElementById('score-counter2').textContent = score;
-  addSentRow();
-  renderWords();
-})();
+/* =========================
+   SAVE WORD
+========================= */
 
-/* ─────────────── THEME ─────────────── */
-function toggleTheme(){
-  const ic=document.getElementById('theme-icon');
-  if(document.body.classList.toggle('light')){
-    ic.className='fa-solid fa-sun'; localStorage.setItem('theme','light');
-  } else {
-    ic.className='fa-solid fa-moon'; localStorage.setItem('theme','dark');
-  }
-}
+document.getElementById('word-form').addEventListener('submit', function(e){
 
-/* ─────────────── TABS ─────────────── */
-function switchTab(id){
-  document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(e=>e.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const b=document.getElementById('btn-'+id);
-  if(b) b.classList.add('active');
-  if(id==='word-list') renderWords();
-  if(id==='practice') generateQ();
-}
-
-/* ─────────────── ALERT ─────────────── */
-function showAlert(msg,type='success'){
-  const el=document.getElementById('alert-box');
-  el.textContent=msg; el.className=type; el.style.display='block';
-  clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',2800);
-}
-
-/* ─────────────── TTS ─────────────── */
-function speak(txt){
-  if(!txt||!txt.trim()||!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(txt);
-  u.lang='en-US'; window.speechSynthesis.speak(u);
-}
-
-/* ─────────────── AUTO SENTENCES ─────────────── */
-function buildAutoSentences(){
-  const v1=(document.getElementById('v1').value||'').trim().toLowerCase();
-  const v2=(document.getElementById('v2').value||'').trim().toLowerCase();
-  const v3=(document.getElementById('v3').value||'').trim().toLowerCase();
-  const s=(document.getElementById('s_form').value||'').trim().toLowerCase();
-  const ing=(document.getElementById('ing_form').value||'').trim().toLowerCase();
-  const meaning=(document.getElementById('meaning').value||'').trim();
-  if(!v1) return [];
-
-  const S=s||v1+'s', ING=ing||v1+'ing', V2=v2||v1+'ed', V3=v3||v2||v1+'ed';
-  const sents=[];
-
-  sents.push({cat:'Geniş Zaman (+)',  en:`She ___ every day.`,        ans:S,   tr:`O her gün ${meaning}.`});
-  sents.push({cat:'Geniş Zaman (–)',  en:`They don't ___ here.`,      ans:v1,  tr:`Onlar burada ${meaning}mez.`});
-  sents.push({cat:'Geniş Zaman (?)',  en:`Does he ___ often?`,        ans:v1,  tr:`O sık sık ${meaning} mi?`});
-  sents.push({cat:'Şimdiki (+)',      en:`I am ___ right now.`,       ans:ING, tr:`Şu an ${meaning}iyorum.`});
-  sents.push({cat:'Şimdiki (–)',      en:`She isn't ___ today.`,      ans:ING, tr:`O bugün ${meaning}yor değil.`});
-  if(V2){
-    sents.push({cat:'Geçmiş (+)',     en:`He ___ yesterday.`,         ans:V2,  tr:`O dün ${meaning}di.`});
-    sents.push({cat:'Geçmiş (–)',     en:`I didn't ___ last night.`,  ans:v1,  tr:`Dün gece ${meaning}medim.`});
-    sents.push({cat:'Geçmiş (?)',     en:`Did you ___ last week?`,    ans:v1,  tr:`Geçen hafta ${meaning}din mi?`});
-  }
-  if(V3){
-    sents.push({cat:'Yakın Geçmiş',   en:`I have already ___.`,       ans:V3,  tr:`Çoktan ${meaning}dim.`});
-    sents.push({cat:'Miş'li Geçmiş',  en:`She had ___ before noon.`,  ans:V3,  tr:`O öğleden önce ${meaning}mişti.`});
-  }
-  sents.push({cat:'Gelecek (will)',   en:`I will ___ tomorrow.`,      ans:v1,  tr:`Yarın ${meaning}eceğim.`});
-  sents.push({cat:'Going to',         en:`We are going to ___ soon.`, ans:v1,  tr:`Yakında ${meaning}eceğiz.`});
-  sents.push({cat:'Modal: can',       en:`You can ___ it easily.`,    ans:v1,  tr:`Onu kolayca ${meaning}ebilirsin.`});
-  sents.push({cat:'Modal: should',    en:`You should ___ more.`,      ans:v1,  tr:`Daha fazla ${meaning}melisin.`});
-  sents.push({cat:'Modal: must',      en:`You must ___ right now.`,   ans:v1,  tr:`Şimdi hemen ${meaning}melisin.`});
-  sents.push({cat:'Modal: could',     en:`Could you ___ for me?`,     ans:v1,  tr:`Benim için ${meaning}er misin?`});
-
-  return sents;
-}
-
-function updateAutoSentences(){
-  const list=document.getElementById('auto-sent-list');
-  const sents=buildAutoSentences();
-  if(!sents.length){
-    list.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px"><i class="fa-solid fa-keyboard" style="display:block;font-size:20px;margin-bottom:6px;color:var(--border2)"></i>Kelime ve V2 girince şablonlar belirir</div>`;
-    return;
-  }
-  list.innerHTML = sents.map((s,i)=>`
-    <div class="auto-sent-item" title="Tıkla ekle" onclick="addAutoSent(${i})">
-      <div class="asi-text">
-        <div class="asi-en">${s.en.replace('___','<u style="color:var(--accent)">'+s.ans+'</u>')}</div>
-        <div class="asi-tr">${s.tr}</div>
-      </div>
-      <span class="asi-cat">${s.cat}</span>
-      <button class="asi-add" id="asi-btn-${i}" onclick="event.stopPropagation();addAutoSent(${i})" title="Ekle">
-        <i class="fa-solid fa-plus"></i>
-      </button>
-    </div>
-  `).join('');
-  autoSentQueue = sents;
-}
-
-function addAutoSent(idx){
-  const s=autoSentQueue[idx];
-  if(!s) return;
-  const btn=document.getElementById('asi-btn-'+idx);
-  if(btn && btn.classList.contains('added')){
-    showAlert('Zaten eklendi','warning'); return;
-  }
-  addSentRow(s.en, s.ans, s.tr);
-  if(btn){ btn.classList.add('added'); btn.innerHTML='<i class="fa-solid fa-check"></i>'; }
-  showAlert(`"${s.cat}" cümlesi eklendi`);
-}
-
-function addAllAutoSents(){
-  const sents=buildAutoSentences();
-  if(!sents.length){ showAlert('Önce kelime gir','warning'); return; }
-  sents.forEach((_,i)=>{
-    const btn=document.getElementById('asi-btn-'+i);
-    if(!btn||btn.classList.contains('added')) return;
-    addAutoSent(i);
-  });
-}
-
-/* ─────────────── SENTENCE ROWS ─────────────── */
-function addSentRow(text='',answer='',turkish=''){
-  sentRowCount++;
-  const id=sentRowCount;
-  const el=document.getElementById('sent-empty');
-  if(el) el.style.display='none';
-  const c=document.getElementById('sent-container');
-  const div=document.createElement('div');
-  div.id=`sr-${id}`; div.className='sent-row';
-  div.innerHTML=`
-    <button type="button" onclick="removeSentRow(${id})" class="iBtn del" style="position:absolute;top:9px;right:9px">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-    <div style="padding-right:30px">
-      <div class="sent-row-grid">
-        <div><label>Cümle (boşluklu)</label><input type="text" id="sr-txt-${id}" placeholder="I ___ to school." value="${text.replace(/"/g,'&quot;')}"></div>
-        <div><label>Doğru Cevap</label><input type="text" id="sr-ans-${id}" placeholder="went" value="${answer}"></div>
-        <div><label>Türkçe</label><input type="text" id="sr-tr-${id}" placeholder="Okula gittim." value="${turkish.replace(/"/g,'&quot;')}"></div>
-      </div>
-    </div>
-  `;
-  c.appendChild(div);
-}
-
-function removeSentRow(id){
-  const el=document.getElementById(`sr-${id}`);
-  if(el) el.remove();
-  if(!document.getElementById('sent-container').children.length){
-    document.getElementById('sent-empty').style.display='';
-  }
-}
-
-/* ─────────────── SAVE WORD ─────────────── */
-function saveWord(e){
   e.preventDefault();
-  const editId=document.getElementById('editing-id').value;
-  const word={
-    id: editId ? parseInt(editId) : Date.now(),
+
+  const word = {
+    id: Date.now(),
     v1: document.getElementById('v1').value.trim().toLowerCase(),
     meaning: document.getElementById('meaning').value.trim(),
-    v2: document.getElementById('v2').value.trim().toLowerCase(),
-    v3: document.getElementById('v3').value.trim().toLowerCase(),
-    s_form: document.getElementById('s_form').value.trim().toLowerCase(),
-    ing_form: document.getElementById('ing_form').value.trim().toLowerCase(),
-    noun: document.getElementById('noun').value.trim().toLowerCase(),
-    adjective: document.getElementById('adjective').value.trim().toLowerCase(),
-    adverb: document.getElementById('adverb').value.trim().toLowerCase(),
-    sentences:[]
+    sentences: [
+      {
+        text: document.getElementById('sentence').value.trim(),
+        answer: document.getElementById('answer').value.trim(),
+        turkish: ''
+      }
+    ]
   };
-  const rows=document.getElementById('sent-container').children;
-  for(let i=0;i<rows.length;i++){
-    const rid=rows[i].id.replace('sr-','');
-    const t=document.getElementById(`sr-txt-${rid}`).value.trim();
-    const a=document.getElementById(`sr-ans-${rid}`).value.trim().toLowerCase();
-    const tr=document.getElementById(`sr-tr-${rid}`).value.trim();
-    if(t&&a) word.sentences.push({text:t,answer:a,turkish:tr});
-  }
-  if(editId){
-    words=words.map(w=>w.id===word.id?word:w);
-    showAlert(`"${word.v1}" güncellendi`);
-  } else {
-    words.push(word);
-    showAlert(`"${word.v1}" eklendi`);
-  }
-  localStorage.setItem('vocab_words',JSON.stringify(words));
-  resetForm(); renderWords();
-}
 
-function resetForm(){
-  document.getElementById('word-form').reset();
-  document.getElementById('editing-id').value='';
-  document.getElementById('form-title').innerHTML='<i class="fa-solid fa-square-plus"></i> Yeni Kelime';
-  document.getElementById('form-submit').innerHTML='<i class="fa-solid fa-floppy-disk"></i> Kaydet';
-  document.getElementById('cancel-edit-btn').style.display='none';
-  document.getElementById('sent-container').innerHTML='';
-  document.getElementById('sent-empty').style.display='';
-  sentRowCount=0; addSentRow();
-  updateAutoSentences();
-}
+  words.push(word);
 
-/* ─────────────── RENDER WORDS ─────────────── */
-function renderWords(){
-  const q=(document.getElementById('search-input').value||'').trim().toLowerCase();
-  const c=document.getElementById('words-container');
-  const em=document.getElementById('words-empty');
-  c.innerHTML='';
-  let filtered=words;
-  if(q){
-    filtered=words.filter(w=>{
-      if(w.v1.includes(q)||w.meaning.toLowerCase().includes(q)) return true;
-      if(w.v2&&w.v2.includes(q)) return true;
-      if(w.noun&&w.noun.includes(q)) return true;
-      if(w.sentences.some(s=>s.text.toLowerCase().includes(q)||s.turkish.toLowerCase().includes(q))) return true;
-      return false;
-    });
-  }
-  if(!filtered.length){ em.style.display=''; return; }
-  em.style.display='none';
-  filtered.forEach(w=>{
-    const card=document.createElement('div');
-    card.className='word-card';
-    card.onclick=()=>openDetail(w.id);
-    card.innerHTML=`
-      <div class="wc-head">
-        <div class="wc-title">
-          ${w.v1}
-          <button onclick="event.stopPropagation();speak('${w.v1}')" class="iBtn spk"><i class="fa-solid fa-volume-high"></i></button>
-        </div>
-        <span class="wc-badge">${w.meaning}</span>
-      </div>
-      <div class="wc-forms">V2:${w.v2||'—'} · V3:${w.v3||'—'} · Noun:${w.noun||'—'}</div>
-      <div class="wc-footer">
-        <span class="wc-sent"><i class="fa-regular fa-comment-dots"></i> ${w.sentences.length} cümle</span>
-        <div class="wc-actions">
-          <button onclick="editWord(${w.id},event)" class="iBtn edit" title="Düzenle"><i class="fa-solid fa-pen-to-square"></i></button>
-          <button onclick="event.stopPropagation();deleteWord(${w.id})" class="iBtn del" title="Sil"><i class="fa-solid fa-trash-can"></i></button>
-        </div>
-      </div>
-    `;
-    c.appendChild(card);
-  });
-}
+  localStorage.setItem('vocab_words', JSON.stringify(words));
 
-/* ─────────────── DETAIL MODAL ─────────────── */
-function openDetail(id){
-  const w=words.find(x=>x.id===id);
-  if(!w) return;
-  const m=document.getElementById('detail-modal');
-  let sHtml='';
-  if(w.sentences&&w.sentences.length){
-    w.sentences.forEach(s=>{
-      const filled=s.text.replace('___',`<u style="color:var(--accent)">${s.answer}</u>`);
-      sHtml+=`<div class="dm-sent"><p>${filled}</p><small>${s.turkish||'—'}</small></div>`;
-    });
-  } else sHtml='<p style="font-size:12px;color:var(--text3)">Cümle eklenmemiş.</p>';
+  this.reset();
 
-  m.innerHTML=`
-    <div class="dm-head">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-family:Space Grotesk;font-size:20px;font-weight:700">${w.v1}</span>
-        <button onclick="speak('${w.v1}')" class="iBtn spk"><i class="fa-solid fa-volume-high"></i></button>
-        <span style="font-size:13px;color:var(--text2)">${w.meaning}</span>
-      </div>
-      <button onclick="closeDetailBtn()" class="iBtn del"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="dm-body">
-      <div class="sec-label">Fiil Çekimleri</div>
-      <div class="dm-grid">
-        <div class="dm-kv"><div class="dm-label">V2 (Past)</div><div class="dm-val">${w.v2||'—'}</div></div>
-        <div class="dm-kv"><div class="dm-label">V3 (Past Part.)</div><div class="dm-val">${w.v3||'—'}</div></div>
-        <div class="dm-kv"><div class="dm-label">-s Form</div><div class="dm-val">${w.s_form||'—'}</div></div>
-        <div class="dm-kv"><div class="dm-label">-ing Form</div><div class="dm-val">${w.ing_form||'—'}</div></div>
-      </div>
-      <div class="sec-label">Kelime Ailesi</div>
-      <div class="dm-grid">
-        <div class="dm-kv"><div class="dm-label">Noun</div><div class="dm-val">${w.noun||'—'}</div></div>
-        <div class="dm-kv"><div class="dm-label">Adjective</div><div class="dm-val">${w.adjective||'—'}</div></div>
-        <div class="dm-kv"><div class="dm-label">Adverb</div><div class="dm-val">${w.adverb||'—'}</div></div>
-      </div>
-      <div class="sec-label">Cümleler</div>
-      ${sHtml}
-      <button onclick="closeDetailBtn();editWord(${w.id},null)" class="btn btn-ghost btn-full btn-sm" style="margin-top:10px">
-        <i class="fa-solid fa-pen-to-square"></i> Düzenle
-      </button>
-    </div>
-  `;
-  document.getElementById('detail-overlay').classList.add('open');
-}
+  renderWords();
 
-function closeDetail(e){
-  if(e.target===document.getElementById('detail-overlay')) closeDetailBtn();
-}
-function closeDetailBtn(){
-  document.getElementById('detail-overlay').classList.remove('open');
-}
+});
 
-/* ─────────────── EDIT / DELETE ─────────────── */
-function editWord(id,ev){
-  if(ev) ev.stopPropagation();
-  const w=words.find(x=>x.id===id);
-  if(!w) return;
-  switchTab('add-word');
-  document.getElementById('editing-id').value=w.id;
-  document.getElementById('form-title').innerHTML=`<i class="fa-solid fa-pen-to-square" style="color:var(--amber)"></i> "${w.v1}" Düzenle`;
-  document.getElementById('form-submit').innerHTML='<i class="fa-solid fa-arrows-rotate"></i> Güncelle';
-  document.getElementById('cancel-edit-btn').style.display='';
-  ['v1','meaning','v2','v3','s_form','ing_form','noun','adjective','adverb'].forEach(f=>{
-    document.getElementById(f).value=w[f]||'';
-  });
-  document.getElementById('sent-container').innerHTML='';
-  document.getElementById('sent-empty').style.display='none';
-  sentRowCount=0;
-  if(w.sentences&&w.sentences.length){
-    w.sentences.forEach(s=>addSentRow(s.text,s.answer,s.turkish||''));
-  } else { addSentRow(); }
-  updateAutoSentences();
-}
+/* =========================
+   DELETE WORD
+========================= */
 
 function deleteWord(id){
-  words=words.filter(w=>w.id!==id);
-  localStorage.setItem('vocab_words',JSON.stringify(words));
-  renderWords(); showAlert('Kelime silindi','warning');
+
+  words = words.filter(w => w.id !== id);
+
+  localStorage.setItem('vocab_words', JSON.stringify(words));
+
+  renderWords();
+
 }
 
-function clearAll(){
-  if(confirm('Tüm kelimeler silinecek. Emin misin?')){
-    words=[]; localStorage.removeItem('vocab_words'); renderWords();
+/* =========================
+   RENDER WORDS
+   DÜZELTİLMİŞ VERSİYON
+========================= */
+
+function renderWords(){
+
+  // GÜVENLİ SEARCH INPUT
+  const searchInput = document.getElementById('search-input');
+
+  const q = (searchInput?.value || '')
+    .trim()
+    .toLowerCase();
+
+  const c = document.getElementById('words-container');
+
+  const em = document.getElementById('words-empty');
+
+  c.innerHTML = '';
+
+  let filtered = words;
+
+  if(q){
+
+    filtered = words.filter(w => {
+
+      // kelime
+      if((w.v1 || '').includes(q)) return true;
+
+      // anlam
+      if((w.meaning || '').toLowerCase().includes(q)) return true;
+
+      // cümlelerde ara
+      if(
+        (w.sentences || []).some(s =>
+          (s.text || '').toLowerCase().includes(q) ||
+          (s.turkish || '').toLowerCase().includes(q)
+        )
+      ){
+        return true;
+      }
+
+      return false;
+
+    });
+
   }
-}
 
-/* ─────────────── PRACTICE ─────────────── */
-function setPMode(m){
-  practiceMode=m;
-  ['fill','flash','tr2en'].forEach(x=>{
-    document.getElementById('pm-'+x).className='mode-tab'+(x===m?' active':'');
-  });
-  generateQ();
-}
+  // boş state
+  if(!filtered.length){
 
-function allSents(){
-  const pool=[];
-  words.forEach(w=>{
-    if(w.sentences&&w.sentences.length){
-      w.sentences.forEach(s=>pool.push({...s, wordV1:w.v1, meaning:w.meaning, word:w}));
-    }
-  });
-  return pool;
-}
+    em.style.display = 'block';
 
-function generateQ(){
-  const area=document.getElementById('practice-area');
-  const empty=document.getElementById('practice-empty');
-  area.innerHTML=''; area.style.display='';
-  empty.style.display='none';
-  currentQ=null; fcFlipped=false;
-
-  if(practiceMode==='flash'){
-    if(!words.length){ area.style.display='none'; empty.style.display=''; return; }
-    fcIndex = (fcIndex+1) % words.length;
-    const w=words[fcIndex];
-    area.innerHTML=`
-      <div class="flashcard" onclick="flipCard()" id="flashcard">
-        <div class="fc-inner" id="fc-inner">
-          <div class="fc-face fc-front">
-            <div class="fc-hint">Çeviriyi hatırla, sonra tıkla →</div>
-            <div class="fc-word">${w.v1}</div>
-            <div style="font-size:12px;color:var(--text3);margin-top:4px">V2: ${w.v2||'?'} · V3: ${w.v3||'?'}</div>
-          </div>
-          <div class="fc-face fc-back">
-            <div class="fc-meaning">${w.meaning}</div>
-            <div class="fc-details">
-              ${w.s_form?'<b>-s:</b> '+w.s_form+'  ':''}
-              ${w.ing_form?'<b>-ing:</b> '+w.ing_form:''}
-              ${w.noun?'<br><b>Noun:</b> '+w.noun:''}
-              ${w.adjective?'  <b>Adj:</b> '+w.adjective:''}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button onclick="generateQ()" class="btn btn-ghost"><i class="fa-solid fa-forward"></i> Sonraki</button>
-        <button onclick="speak('${w.v1}')" class="btn btn-ghost"><i class="fa-solid fa-volume-high" style="color:var(--accent)"></i> Dinle</button>
-      </div>
-      <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text3)">${fcIndex+1} / ${words.length} kelime</div>
-    `;
     return;
+
   }
 
-  const pool=allSents();
-  if(!pool.length){ area.style.display='none'; empty.style.display=''; return; }
-  const q=pool[Math.floor(Math.random()*pool.length)];
-  currentQ=q;
+  em.style.display = 'none';
 
-  if(practiceMode==='fill'){
-    area.innerHTML=`
-      <div class="quiz-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div class="quiz-badge"><i class="fa-solid fa-tag"></i> ${q.wordV1} · boşluk doldur</div>
-        </div>
-        <p class="quiz-sent">${q.text}</p>
-        <p class="quiz-hint">Türkçe: ${q.turkish||q.meaning||'—'}</p>
-        <div class="quiz-input-row">
-          <input type="text" id="quiz-input" placeholder="Cevabınız..." onkeydown="if(event.key==='Enter')checkFill()">
-          <button onclick="checkFill()" class="btn btn-primary">Kontrol</button>
-        </div>
-        <div id="quiz-fb" class="quiz-fb"></div>
+  // kartları bas
+  filtered.forEach(w => {
+
+    const card = document.createElement('div');
+
+    card.className = 'word-card';
+
+    const firstSentence = w.sentences?.[0];
+
+    card.innerHTML = `
+      <div class="word-title">
+        ${w.v1}
       </div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button onclick="generateQ()" class="btn btn-ghost btn-sm"><i class="fa-solid fa-forward"></i> Atla</button>
-        <button onclick="speak('${q.text.replace('___',q.answer)}')" class="btn btn-ghost btn-sm"><i class="fa-solid fa-volume-high" style="color:var(--accent)"></i> Dinle</button>
+
+      <div class="word-meaning">
+        ${w.meaning}
+      </div>
+
+      <div class="word-sent">
+        ${firstSentence?.text || 'Cümle yok'}
+      </div>
+
+      <div style="margin-top:12px">
+        <button onclick="deleteWord(${w.id})">
+          Sil
+        </button>
       </div>
     `;
-    setTimeout(()=>{ const inp=document.getElementById('quiz-input'); if(inp) inp.focus(); }, 50);
-  } else {
-    // TR → EN
-    area.innerHTML=`
-      <div class="quiz-card">
-        <div class="quiz-badge"><i class="fa-solid fa-language"></i> ${q.wordV1} · TR → EN yaz</div>
-        <p class="quiz-sent">${q.turkish||'(Türkçe çeviri yok)'}</p>
-        <p class="quiz-hint">Kelime: <b>${q.wordV1}</b> · Cevap boşluklu cümle değil, sadece eksik kelime</p>
-        <div class="quiz-input-row">
-          <input type="text" id="quiz-input" placeholder="İngilizce kelimeyi yaz..." onkeydown="if(event.key==='Enter')checkFill()">
-          <button onclick="checkFill()" class="btn btn-primary">Kontrol</button>
-        </div>
-        <div id="quiz-fb" class="quiz-fb"></div>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button onclick="generateQ()" class="btn btn-ghost btn-sm"><i class="fa-solid fa-forward"></i> Atla</button>
-        <button onclick="speak('${q.text.replace('___',q.answer)}')" class="btn btn-ghost btn-sm"><i class="fa-solid fa-volume-high" style="color:var(--accent)"></i> Dinle</button>
-      </div>
-    `;
-    setTimeout(()=>{ const inp=document.getElementById('quiz-input'); if(inp) inp.focus(); }, 50);
-  }
+
+    c.appendChild(card);
+
+  });
+
 }
 
-function flipCard(){
-  const inner=document.getElementById('fc-inner');
-  if(!inner) return;
-  fcFlipped=!fcFlipped;
-  if(fcFlipped) inner.classList.add('flipped'); else inner.classList.remove('flipped');
-}
+/* =========================
+   INIT
+========================= */
 
-function checkFill(){
-  if(!currentQ) return;
-  const input=(document.getElementById('quiz-input').value||'').trim().toLowerCase();
-  const fb=document.getElementById('quiz-fb');
-  if(!fb) return;
-  fb.style.display='block';
-  if(input===currentQ.answer){
-    fb.textContent='🎉 Doğru!'; fb.className='quiz-fb correct';
-    score+=10; localStorage.setItem('vocab_score',score);
-    document.getElementById('score-counter').textContent=score;
-    document.getElementById('score-counter2').textContent=score;
-    speak(currentQ.text.replace('___',currentQ.answer));
-    setTimeout(generateQ, 1600);
-  } else {
-    fb.textContent=`❌ Yanlış. Doğru: "${currentQ.answer}"`; fb.className='quiz-fb wrong';
-  }
-}
+renderWords();
 
-/* ─────────────── INIT CALL ─────────────── */
-updateAutoSentences();
 </script>
+
 </body>
 </html>
